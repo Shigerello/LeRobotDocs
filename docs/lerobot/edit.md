@@ -1,0 +1,144 @@
+# データセットの編集
+
+収集したデータセットから、失敗したエピソードを取り除きます。LeRobot付属の`lerobot-edit-dataset`を使います（LeRobot 0.6.0で動作を確認）。
+
+!!! warning
+    元のデータセットは変更せず、別のディレクトリへ出力する方法を使います。`--root`と`--new_root`の指定を誤ると、結果が意図しない場所に出力されたり、元のデータセットが上書きされたりします。詳しくは「出力先の注意」を参照してください。
+
+## 1. 準備
+
+`lerobot-edit-dataset`が使えない場合は、`dataset`オプション付きでLeRobotを追加インストールします。
+
+```bash
+pip install 'lerobot[dataset]'
+```
+
+削除するエピソードの番号を決めます。番号は**0始まり**です。[カメラの調整](camera.md)の「Rerunを起動」と同じ`lerobot-dataset-viz`で、`--episode-index`にエピソード番号を指定して確認できます。
+
+## 2. エピソードを削除する
+
+例では、エピソード`1`と`2`を削除します。
+
+```bash
+cd "{{PROJECT_DIR}}"
+export HF_HUB_OFFLINE=1
+
+lerobot-edit-dataset \
+  --repo_id {{DATASET_REPO_ID}} \
+  --root {{DATASET_DIR}} \
+  --new_repo_id {{DATASET_REPO_ID}}_clean \
+  --new_root {{DATASET_DIR}}_clean \
+  --operation.type delete_episodes \
+  --operation.episode_indices "[1, 2]"
+```
+
+- `HF_HUB_OFFLINE=1`は、ローカルのデータセットだけを扱うため、Hugging Face Hubへのアクセスを無効にします。
+- `--new_repo_id`と`--new_root`を指定すると、元のデータセットは変更されず、`{{DATASET_DIR}}_clean`に新しいデータセットが作られます。
+- 残したエピソードを含む動画ファイルは、再エンコードされます。
+- 出力先の`{{DATASET_DIR}}_clean`がすでに存在すると、`FileExistsError`で止まります。前回の結果が不要であれば削除し、必要であれば別の名前へ変更してから、もう一度実行します。
+
+## 3. 結果を確認する
+
+ログの最後に、削除後のエピソード数とフレーム数が表示されます。
+
+```text
+Episodes: 2, Frames: 24
+```
+
+次のコマンドでも確認できます。
+
+```bash
+python -c "import json; i = json.load(open('{{DATASET_DIR}}_clean/meta/info.json')); print(i['total_episodes'], i['total_frames'])"
+```
+
+エピソード番号は、残ったものを元の順序のまま**0から振り直します**。たとえば0〜3のうち1と2を削除すると、元の0と3は、新しいデータセットの0と1になります。`lerobot-dataset-viz`に`--root {{DATASET_DIR}}_clean`を指定すると、削除後のデータセットを再生して確認できます。
+
+## 4. 元のデータセットと差し替える
+
+確認できたら、元のデータセットを日時付きの名前へ退避し、削除後のデータセットを元の名前にします。
+
+```bash
+cd "{{PROJECT_DIR}}"
+
+mv "{{DATASET_DIR}}" "{{DATASET_DIR}}_backup_$(date +%Y%m%d_%H%M%S)"
+mv "{{DATASET_DIR}}_clean" "{{DATASET_DIR}}"
+```
+
+退避したデータセットは、学習の結果を確認するまで残しておきます。
+
+## 出力先の注意
+
+!!! warning
+    - `--root`だけを指定して`--new_root`を省略すると、元のディレクトリは変更されません。結果は`$HF_LEROBOT_HOME/<repo_id>`（既定では`~/.cache/huggingface/lerobot/`の下）に出力されます。
+    - `--root`と`--new_root`に同じ値を指定すると、その場で上書きされます。元のデータセットは`<ディレクトリ名>_old`に退避されますが、残るのは直前の1回分だけです。続けて2回実行すると、最初のデータセットは失われます。
+
+## エラーが出たとき
+
+### `AssertionError: Episode length mismatch`
+
+エピソードの長さと、動画側の長さが食い違っているときに出ます。メッセージにエピソード番号は表示されないため、次のスクリプトで食い違うエピソードを探します。
+
+```python
+import glob
+import json
+
+import pyarrow.parquet as pq
+
+root = "{{DATASET_DIR}}"
+fps = json.load(open(f"{root}/meta/info.json"))["fps"]
+
+for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
+    for row in pq.read_table(path).to_pylist():
+        for key in [k for k in row if k.startswith("videos/") and k.endswith("/from_timestamp")]:
+            camera = key[len("videos/"):-len("/from_timestamp")]
+            frames = round(row[f"videos/{camera}/to_timestamp"] * fps) - round(row[key] * fps)
+            if frames != row["length"]:
+                print(f"episode {row['episode_index']} ({camera}): length={row['length']} 動画側={frames}")
+print("検査完了")
+```
+
+食い違うエピソードが見つかったら、次のどちらかで対処します。
+
+**A. そのエピソードも削除する**
+
+失敗したエピソードであれば、削除対象の`--operation.episode_indices`に加えて、もう一度実行します。
+
+**B. そのエピソードを残す**
+
+メタデータの`to_timestamp`を、`from_timestamp`と`length`から計算した値に直します。作業の前に、データセットのバックアップを作成してください。
+
+```python
+import glob
+import json
+
+import pyarrow.parquet as pq
+import pyarrow as pa
+
+root = "{{DATASET_DIR}}"
+episode = 1                          # 食い違っていたエピソード番号
+camera = "observation.images.front"  # 食い違っていたカメラ名
+
+fps = json.load(open(f"{root}/meta/info.json"))["fps"]
+for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
+    table = pq.read_table(path)
+    rows = table.to_pydict()
+    if episode not in rows["episode_index"]:
+        continue
+    i = rows["episode_index"].index(episode)
+    rows[f"videos/{camera}/to_timestamp"][i] = rows[f"videos/{camera}/from_timestamp"][i] + rows["length"][i] / fps
+    pq.write_table(pa.table(rows, schema=table.schema), path)
+```
+
+LeRobot 0.6.0では、動画の読み出しに使われるのは`from_timestamp`だけなので、この補正で読み出し結果は変わりません。
+
+**A、Bどちらの場合も**、エラーで止まった実行は、出力先を途中まで作っています。次のコマンドで途中の出力先だけを削除してから、「2. エピソードを削除する」をもう一度実行します。元のデータセット（`{{DATASET_DIR}}`）には影響しません。
+
+```bash
+rm -rf "{{DATASET_DIR}}_clean"
+```
+
+## リファレンス
+
+- [LeRobot Dataset V3.0](https://huggingface.co/docs/lerobot/lerobot-dataset-v3)
+- [lerobot-edit-dataset（LeRobot v0.6.0）](https://github.com/huggingface/lerobot/blob/v0.6.0/src/lerobot/scripts/lerobot_edit_dataset.py)
+- [LeRobot v0.6.0 Release](https://github.com/huggingface/lerobot/releases/tag/v0.6.0)

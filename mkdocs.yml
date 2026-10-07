@@ -35,6 +35,7 @@ nav:
     - キャリブレーション: "lerobot/calibration.md"
     - カメラの調整: "lerobot/camera.md"
     - データセットの収集: "lerobot/collect.md"
+    - データセットの編集: "lerobot/edit.md"
     - 学習: "lerobot/train.md"
     - 推論の実行: "lerobot/run.md"
     - ノウハウ: "lerobot/knowhow.md"
