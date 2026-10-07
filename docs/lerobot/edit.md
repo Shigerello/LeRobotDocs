@@ -13,11 +13,111 @@
 pip install 'lerobot[dataset]'
 ```
 
-削除するエピソードの番号を決めます。番号は**0始まり**です。[カメラの調整](camera.md)の「Rerunを起動」と同じ`lerobot-dataset-viz`で、`--episode-index`にエピソード番号を指定して確認できます。
+## 2. データセットの内容を確認する
 
-## 2. エピソードを削除する
+削除の前に、どのようなエピソードがあるかを把握し、可視化して問題のあるエピソードを見つけます。ここで決めたエピソード番号を、「3. エピソードを削除する」で使います。
 
-例では、エピソード`1`と`2`を削除します。
+### 概要を表示する
+
+```bash
+cd "{{PROJECT_DIR}}"
+export HF_HUB_OFFLINE=1
+
+lerobot-edit-dataset \
+  --repo_id {{DATASET_REPO_ID}} \
+  --root {{DATASET_DIR}} \
+  --operation.type info
+```
+
+出力例です。
+
+```text
+======Info user/mydata
+Repository ID: user/mydata
+Total episode: 45
+Total task: 1
+Total frame(Actual Count): 13482(13482)
+Average frame per episode: 299.6
+Average episode time(sec): 10.0
+FPS: 30
+Size: 568.0 MB
+```
+
+- `Total episode`は、エピソードの数です。エピソード番号は、0から`Total episode`の値より1小さい数までです。
+- `Total frame(Actual Count)`は、左が記録上のフレーム数、括弧の中が実際に読み込めるフレーム数です。値が異なる場合は、データセットのメタデータに不整合があるおそれがあります。
+- `Average episode time(sec)`は、1エピソードの平均の長さです。収集時に指定した`--dataset.episode_time_s`と比べる目安になります。
+- `--operation.show_features=true`を付けると、カメラ名や関節名を含む特徴量も表示されます。
+
+### エピソードごとの長さを確認する
+
+`info`が表示するのは、全体の集計だけです。エピソードごとの長さは、次のスクリプトで一覧できます。
+
+```python
+import glob
+import json
+
+import pyarrow.parquet as pq
+
+root = "{{DATASET_DIR}}"
+fps = json.load(open(f"{root}/meta/info.json"))["fps"]
+
+rows = []
+for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
+    rows += pq.read_table(path, columns=["episode_index", "length", "tasks"]).to_pylist()
+rows.sort(key=lambda r: r["episode_index"])
+
+mean = sum(r["length"] for r in rows) / len(rows)
+print("episode  frames  seconds  vs_mean  task")
+for r in rows:
+    print(f"{r['episode_index']:7d}  {r['length']:6d}  {r['length'] / fps:7.1f}  {r['length'] / mean:6.0%}  {', '.join(r['tasks'])}")
+```
+
+出力例です。
+
+```text
+episode  frames  seconds  vs_mean  task
+      0     300     10.0    102%  Pick up the red cube
+      1     120      4.0     41%  Pick up the red cube
+      2     298      9.9    101%  Pick up the red cube
+      3     450     15.0    153%  Pick up the red cube
+      4     301     10.0    102%  Pick up the red cube
+```
+
+`vs_mean`は、全エピソードの平均の長さに対する割合です。極端に短い、または長いエピソードは、途中で止まった、時間切れになったなどの可能性があるため、次の可視化で優先して確認します。
+
+### エピソードを可視化して確認する
+
+```bash
+lerobot-dataset-viz \
+  --repo-id {{DATASET_REPO_ID}} \
+  --root {{DATASET_DIR}} \
+  --episode-index 0 \
+  --mode distant \
+  --web-port 9090 \
+  --grpc-port 9876 \
+  --num-workers 0 \
+  --batch-size 1 \
+  --display-compressed-images
+```
+
+接続方法は、[カメラの調整](camera.md)の「Rerunを起動」と同じです。`--episode-index`を変えながら、1エピソードずつ確認します。Jetsonに接続したディスプレイで直接見る場合は、`--mode distant`を`--mode local`に変えます。ビューアがその場で開きます。
+
+映像と関節の動きを見て、把持の失敗、時間切れ、環境のリセット忘れなど、学習に使いたくないエピソードを探します。
+
+### 確認結果を控える
+
+確認したエピソードと、その結果を控えておきます。削除すると、エピソード番号は振り直されます。控えがあれば、「4. 結果を確認する」のあとも、元のエピソードとの対応を追えます。
+
+|エピソード|確認結果|対応|
+|:--|:--|:--|
+|0|問題なし|残す|
+|1|把持に失敗|削除|
+|2|時間切れ|削除|
+|3|問題なし|残す|
+
+## 3. エピソードを削除する
+
+例では、上の控えのとおり、エピソード`1`と`2`を削除します。
 
 ```bash
 cd "{{PROJECT_DIR}}"
@@ -37,7 +137,7 @@ lerobot-edit-dataset \
 - 残したエピソードを含む動画ファイルは、再エンコードされます。
 - 出力先の`{{DATASET_DIR}}_clean`がすでに存在すると、`FileExistsError`で止まります。前回の結果が不要であれば削除し、必要であれば別の名前へ変更してから、もう一度実行します。
 
-## 3. 結果を確認する
+## 4. 結果を確認する
 
 ログの最後に、削除後のエピソード数とフレーム数が表示されます。
 
@@ -53,7 +153,7 @@ python -c "import json; i = json.load(open('{{DATASET_DIR}}_clean/meta/info.json
 
 エピソード番号は、残ったものを元の順序のまま**0から振り直します**。たとえば0〜3のうち1と2を削除すると、元の0と3は、新しいデータセットの0と1になります。`lerobot-dataset-viz`に`--root {{DATASET_DIR}}_clean`を指定すると、削除後のデータセットを再生して確認できます。
 
-## 4. 元のデータセットと差し替える
+## 5. 元のデータセットと差し替える
 
 確認できたら、元のデータセットを日時付きの名前へ退避し、削除後のデータセットを元の名前にします。
 
@@ -131,7 +231,7 @@ for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
 
 LeRobot 0.6.0では、動画の読み出しに使われるのは`from_timestamp`だけなので、この補正で読み出し結果は変わりません。
 
-**A、Bどちらの場合も**、エラーで止まった実行は、出力先を途中まで作っています。次のコマンドで途中の出力先だけを削除してから、「2. エピソードを削除する」をもう一度実行します。元のデータセット（`{{DATASET_DIR}}`）には影響しません。
+**A、Bどちらの場合も**、エラーで止まった実行は、出力先を途中まで作っています。次のコマンドで途中の出力先だけを削除してから、「3. エピソードを削除する」をもう一度実行します。元のデータセット（`{{DATASET_DIR}}`）には影響しません。
 
 ```bash
 rm -rf "{{DATASET_DIR}}_clean"
