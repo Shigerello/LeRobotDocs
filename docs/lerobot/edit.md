@@ -61,15 +61,21 @@ import pyarrow.parquet as pq
 root = "{{DATASET_DIR}}"
 fps = json.load(open(f"{root}/meta/info.json"))["fps"]
 
+pattern = f"{root}/meta/episodes/chunk-*/file-*.parquet"
+columns = ["episode_index", "length", "tasks"]
 rows = []
-for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
-    rows += pq.read_table(path, columns=["episode_index", "length", "tasks"]).to_pylist()
+for path in sorted(glob.glob(pattern)):
+    rows += pq.read_table(path, columns=columns).to_pylist()
 rows.sort(key=lambda r: r["episode_index"])
 
 mean = sum(r["length"] for r in rows) / len(rows)
 print("episode  frames  seconds  vs_mean  task")
 for r in rows:
-    print(f"{r['episode_index']:7d}  {r['length']:6d}  {r['length'] / fps:7.1f}  {r['length'] / mean:6.0%}  {', '.join(r['tasks'])}")
+    seconds = r["length"] / fps
+    ratio = r["length"] / mean
+    task = ", ".join(r["tasks"])
+    print(f"{r['episode_index']:7d}  {r['length']:6d}  "
+          f"{seconds:7.1f}  {ratio:6.0%}  {task}")
 ```
 
 出力例です。
@@ -148,7 +154,12 @@ Episodes: 2, Frames: 24
 次のコマンドでも確認できます。
 
 ```bash
-python -c "import json; i = json.load(open('{{DATASET_DIR}}_clean/meta/info.json')); print(i['total_episodes'], i['total_frames'])"
+python - <<'EOF'
+import json
+root = "{{DATASET_DIR}}_clean"
+i = json.load(open(f"{root}/meta/info.json"))
+print(i["total_episodes"], i["total_frames"])
+EOF
 ```
 
 エピソード番号は、残ったものを元の順序のまま**0から振り直します**。たとえば0〜3のうち1と2を削除すると、元の0と3は、新しいデータセットの0と1になります。`lerobot-dataset-viz`に`--root {{DATASET_DIR}}_clean`を指定すると、削除後のデータセットを再生して確認できます。
@@ -160,8 +171,11 @@ python -c "import json; i = json.load(open('{{DATASET_DIR}}_clean/meta/info.json
 ```bash
 cd "{{PROJECT_DIR}}"
 
-mv "{{DATASET_DIR}}" "{{DATASET_DIR}}_backup_$(date +%Y%m%d_%H%M%S)"
-mv "{{DATASET_DIR}}_clean" "{{DATASET_DIR}}"
+DATASET_DIR="{{DATASET_DIR}}"
+BACKUP="${DATASET_DIR}_backup_$(date +%Y%m%d_%H%M%S)"
+
+mv "$DATASET_DIR" "$BACKUP"
+mv "${DATASET_DIR}_clean" "$DATASET_DIR"
 ```
 
 退避したデータセットは、学習の結果を確認するまで残しておきます。
@@ -186,14 +200,21 @@ import pyarrow.parquet as pq
 
 root = "{{DATASET_DIR}}"
 fps = json.load(open(f"{root}/meta/info.json"))["fps"]
+pattern = f"{root}/meta/episodes/chunk-*/file-*.parquet"
+prefix, suffix = "videos/", "/from_timestamp"
 
-for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
+for path in sorted(glob.glob(pattern)):
     for row in pq.read_table(path).to_pylist():
-        for key in [k for k in row if k.startswith("videos/") and k.endswith("/from_timestamp")]:
-            camera = key[len("videos/"):-len("/from_timestamp")]
-            frames = round(row[f"videos/{camera}/to_timestamp"] * fps) - round(row[key] * fps)
+        for key in row:
+            if not (key.startswith(prefix) and key.endswith(suffix)):
+                continue
+            camera = key[len(prefix):-len(suffix)]
+            start = row[key]
+            end = row[f"videos/{camera}/to_timestamp"]
+            frames = round(end * fps) - round(start * fps)
             if frames != row["length"]:
-                print(f"episode {row['episode_index']} ({camera}): length={row['length']} 動画側={frames}")
+                print(f"episode {row['episode_index']} ({camera}): "
+                      f"length={row['length']} 動画側={frames}")
 print("検査完了")
 ```
 
@@ -211,21 +232,24 @@ print("検査完了")
 import glob
 import json
 
-import pyarrow.parquet as pq
 import pyarrow as pa
+import pyarrow.parquet as pq
 
 root = "{{DATASET_DIR}}"
 episode = 1                          # 食い違っていたエピソード番号
 camera = "observation.images.front"  # 食い違っていたカメラ名
 
 fps = json.load(open(f"{root}/meta/info.json"))["fps"]
-for path in sorted(glob.glob(f"{root}/meta/episodes/chunk-*/file-*.parquet")):
+pattern = f"{root}/meta/episodes/chunk-*/file-*.parquet"
+for path in sorted(glob.glob(pattern)):
     table = pq.read_table(path)
     rows = table.to_pydict()
     if episode not in rows["episode_index"]:
         continue
     i = rows["episode_index"].index(episode)
-    rows[f"videos/{camera}/to_timestamp"][i] = rows[f"videos/{camera}/from_timestamp"][i] + rows["length"][i] / fps
+    start = rows[f"videos/{camera}/from_timestamp"][i]
+    end = start + rows["length"][i] / fps
+    rows[f"videos/{camera}/to_timestamp"][i] = end
     pq.write_table(pa.table(rows, schema=table.schema), path)
 ```
 
