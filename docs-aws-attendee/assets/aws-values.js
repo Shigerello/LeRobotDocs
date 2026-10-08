@@ -190,7 +190,7 @@
     }
     const actions = document.createElement('div'); actions.className = 'lerobot-port-actions';
     const reset = document.createElement('button'); reset.type = 'button';
-    reset.className = 'lerobot-port-btn'; reset.textContent = '入力と保存をリセット';
+    reset.className = 'lerobot-port-btn aws-reset-danger'; reset.textContent = '入力と保存をリセット';
     reset.addEventListener('click', () => {
       state = {}; save();
       for (const status of document.querySelectorAll('[data-aws-transfer-status]')) status.textContent = '';

@@ -26,3 +26,20 @@
 .aws-placeholder-unset { background: rgba(255, 152, 0, .18); }
 a[aria-disabled="true"] { cursor: default; }
 [data-aws-transfer-status] { overflow-wrap: anywhere; }
+
+.lerobot-port-btn.aws-reset-danger {
+  background: #b3261e;
+  border-color: #b3261e;
+  color: #fff;
+}
+.lerobot-port-btn.aws-reset-danger:hover {
+  background: #8c1d18;
+  border-color: #8c1d18;
+}
+.lerobot-port-btn.aws-reset-danger:active {
+  background: #601410;
+  border-color: #601410;
+}
+.lerobot-port-btn.aws-reset-danger:focus-visible {
+  outline-color: #b3261e;
+}
