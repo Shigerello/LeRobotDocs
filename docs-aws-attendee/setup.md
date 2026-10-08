@@ -1,5 +1,7 @@
 # 手元の PC の準備と更新
 
+最初に [共通値の設定](common.md) を開き、講師から受け取った値を入力してください。認証情報ファイルのパス・期限付き URL はフォームに保存せず、各コマンドの手動置換箇所で指定します。
+
 実行場所: **手元の PC のターミナル**。macOS での導入は実測済みです。Ubuntu / Jetson / WSL は元手順に基づく案内で、今回の端末実測には含めません。
 
 !!! warning "修正版の配布を確認してから開始"
@@ -11,7 +13,7 @@
 
 | 受け取るもの | 内容 |
 | --- | --- |
-| 認証情報ファイル | `<受講者 ID>.env` という名前のファイル。`<受講者 ID>.credentials` というファイルも一緒に渡された場合は、2 つを同じフォルダに置きます |
+| 認証情報ファイル | `{{ATTENDEE_ID}}.env` という名前のファイル。`{{ATTENDEE_ID}}.credentials` というファイルも一緒に渡された場合は、2 つを同じフォルダに置きます |
 | 導入スクリプトの URL | `https://` で始まる長い URL。有効期限があるため、受け取ったら早めに使います |
 
 認証情報ファイルは、あなたとして AWS を操作できる鍵です。
@@ -95,7 +97,7 @@ git --version
 
 ## 2. 講習会用の環境を用意する
 
-導入スクリプトを取得して実行すると、講習会用のコマンドと講義資料が 1 つのフォルダ（既定は `~/gclue-ai-handson/<開催 ID>/`）にまとめて用意されます。
+導入スクリプトを取得して実行すると、講習会用のコマンドと講義資料が 1 つのフォルダ（既定は `~/gclue-ai-handson/{{EVENT_ID}}/`）にまとめて用意されます。
 そのフォルダの外には何も書き込まず、管理者の権限（sudo）も使いません。
 
 1. 導入スクリプトを取得します。
@@ -111,14 +113,14 @@ git --version
 2. 受け取った認証情報ファイルを指定して、導入スクリプトを実行します。
 
    ```bash
-   bash bootstrap.sh --env-file <認証情報ファイル>
+   bash bootstrap.sh --env-file '<認証情報ファイルの絶対パス>'
    ```
 
-   - `<認証情報ファイル>`: 受け取った `<受講者 ID>.env` のパス（例: `~/Downloads/user04.env`）。
+   - `<認証情報ファイル>`: 受け取った `{{ATTENDEE_ID}}.env` のパス（絶対パスを指定します）。
 
    講師が公開している最新の講義資料も一緒に取得されます。
    最後に `gclue-ai-handson の実行環境を用意しました:` と、用意したフォルダの場所・受講者 ID・開催 ID が表示されれば成功です。
-   表示された開催 ID は、以降の手順の `<開催 ID>` に使います。
+   表示された開催 ID は、[共通値の設定](common.md) の開催 ID に入力します。
 
    必要に応じて、次のオプションを付けます。
 
@@ -140,10 +142,10 @@ git --version
 新しくターミナルを開いたら、毎回最初に次のコマンドを実行します。
 
 ```bash
-source ~/gclue-ai-handson/<開催 ID>/activate
+source ~/gclue-ai-handson/{{EVENT_ID}}/activate
 ```
 
-- `<開催 ID>`: 導入スクリプトの最後に表示された開催 ID。`--dir` で場所を変えた場合は、そのフォルダの `activate` を指定します。
+- `{{EVENT_ID}}`: 導入スクリプトの最後に表示された開催 ID。`--dir` で場所を変えた場合は、そのフォルダの `activate` を指定します。
 
 有効になったことを確かめます。
 
@@ -171,7 +173,7 @@ gclue-ai-handson-attendee env update
 ```
 
 `講義資料の版 <版> を … に用意しました。` と表示されれば成功です。
-講義資料は `~/gclue-ai-handson/<開催 ID>/materials/current/` から開けます。
+講義資料は `~/gclue-ai-handson/{{EVENT_ID}}/materials/current/` から開けます。
 
 - 特定の版を指示された場合は、`--version <版>` を付けます。
 - コマンドだけを更新する場合は、`--tools-only` を付けます。
@@ -182,15 +184,15 @@ gclue-ai-handson-attendee env update
 期限が切れたときや、講師から新しい認証情報ファイルを受け取ったときは、次のコマンドで入れ替えます。
 
 ```bash
-gclue-ai-handson-attendee env credentials --env-file <新しい認証情報ファイル>
+gclue-ai-handson-attendee env credentials --env-file '<新しい認証情報ファイルの絶対パス>'
 ```
 
-- `<新しい認証情報ファイル>`: 新しく受け取った `<受講者 ID>.env` のパス。
+- `<新しい認証情報ファイル>`: 新しく受け取った `{{ATTENDEE_ID}}.env` のパス。
 
 `認証情報を … に置きました。` と表示されたら、開いているターミナルごとに `activate` を読み込み直します。
 
 ```bash
-source ~/gclue-ai-handson/<開催 ID>/activate
+source ~/gclue-ai-handson/{{EVENT_ID}}/activate
 ```
 
 `env info` で、認証情報の有効期限が新しくなっていることを確かめます。

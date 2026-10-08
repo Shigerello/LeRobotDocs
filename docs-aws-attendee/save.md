@@ -1,5 +1,7 @@
 # 成果を保存して手元に取り戻す
 
+最初に [共通値の設定](common.md) を開き、講師から受け取った値を入力してください。認証情報ファイルのパス・期限付き URL はフォームに保存せず、各コマンドの手動置換箇所で指定します。
+
 学習の完了を前提とせず、まず小さなテキストファイルで経路を確認できます。S3 への小さなファイルの保存・再取得と内容一致は実測済みです。最終成果をすべて回収する講習会終了工程は未実施です。
 
 ## 9. 学習済みウェイトなどの成果を保存し、取り戻す
@@ -24,7 +26,7 @@ gclue-ai-handson-attendee files upload ./checkpoints --to models/day1
 SSH か DCV のターミナル（`ubuntu` ユーザー）で、次のコマンドを順に実行します。
 
 ```bash
-source /tmp/gclue-ai-handson-<開催 ID>-<受講者 ID>.env
+source /tmp/gclue-ai-handson-{{EVENT_ID}}-{{ATTENDEE_ID}}.env
 ```
 
 ```bash

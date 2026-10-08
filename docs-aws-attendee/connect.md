@@ -1,5 +1,7 @@
 # AWS コンソールと EC2 への接続
 
+最初に [共通値の設定](common.md) を開き、講師から受け取った値を入力してください。認証情報ファイルのパス・期限付き URL はフォームに保存せず、各コマンドの手動置換箇所で指定します。
+
 最初のコマンドはすべて **手元の PC** で実行します。`shell` / `ssh` で接続した後は **EC2** です。`exit` で手元に戻ります。DCV は手元のトンネル用ターミナルを開いたまま使います。
 
 ## 6. AWS マネジメントコンソールを開く
@@ -24,7 +26,13 @@ gclue-ai-handson-attendee shell
 終了するときは `exit` を入力します。
 
 シェルで接続したときのユーザーは `ssm-user` です。
-SSH や DCV と同じ `ubuntu` ユーザーとして作業するときは、接続後に `sudo -iu ubuntu` を実行します。
+SSH や DCV と同じ `ubuntu` ユーザーとして作業するときは、接続後の **EC2** で次を実行します。
+
+```bash
+sudo -iu ubuntu
+```
+
+この切替後は `exit` で `ssm-user` に戻り、もう一度 `exit` で手元に戻ります。
 
 ### 7.2 DCV（リモートデスクトップ）のパスワードを設定する（初回だけ）
 
@@ -97,7 +105,7 @@ gclue-ai-handson-attendee git pull
 今のブランチとは別のブランチを取り込むときは、`--branch <ブランチ>` を付けます。
 
 ```bash
-gclue-ai-handson-attendee git pull --branch <ブランチ>
+gclue-ai-handson-attendee git pull --branch '<ブランチ>'
 ```
 
 手元の作業中のファイルは変わりません。
@@ -105,10 +113,20 @@ gclue-ai-handson-attendee git pull --branch <ブランチ>
 
 - 送られるのはコミット済みの内容だけです。コミットしていない変更は送られません。
 - `git push` では、手元のリポジトリに設定した名前とメールアドレス（`user.name`・`user.email`）も自分の EC2 のリポジトリに設定されます。自分の EC2 で作るコミットにも同じ名前が記録されます。
-- リポジトリにサブモジュールがある場合は、`git push` がサブモジュールも一緒に送ります。手元のサブモジュールを先に `git submodule update --init` で用意しておいてください。
+- リポジトリにサブモジュールがある場合は、`git push` がサブモジュールも一緒に送ります。先に下の「サブモジュールを用意する」を実行してください。
 - `git push`・`git pull` は内部で何回か接続するため、終わるまで少し時間がかかります。
 - 自分の EC2 の場所を変える場合は、`--remote-dir <場所>`（例: `--remote-dir /home/ubuntu/work/repo`）を付けます。
 - 手元のリポジトリの外から実行する場合は、`--repo <手元のリポジトリのフォルダ>` を付けます。
+
+#### サブモジュールを用意する
+
+実行場所: **手元の PC の、送信する Git リポジトリのフォルダ**。サブモジュールを使う教材で、Git push の前に実行します。
+
+```bash
+git submodule update --init
+```
+
+エラーなく終了したら、上の `gclue-ai-handson-attendee git push` を実行します。取得権限のエラーが出る場合は、教材リポジトリへのアクセス権を講師に確認してください。
 
 ### 7.6 普段の ssh・scp・VS Code から接続する
 
@@ -128,26 +146,26 @@ gclue-ai-handson-attendee git pull --branch <ブランチ>
 3. 接続できることを確かめます。
 
    ```bash
-   ssh gclue-ai-handson-<開催 ID>
+   ssh gclue-ai-handson-{{EVENT_ID}}
    ```
 
    `ubuntu@` で始まるプロンプトが表示されれば成功です。
 
-VS Code では、Remote-SSH 拡張機能の「Connect to Host」で `gclue-ai-handson-<開催 ID>` を選びます。
+VS Code では、Remote-SSH 拡張機能の「Connect to Host」で `gclue-ai-handson-{{EVENT_ID}}` を選びます。
 Windows では、WSL の中の VS Code の設定を Windows 側の VS Code は読まないため、この方法は使えません。
 
 - 認証情報を入れ替えても、設定ファイルを作り直す必要はありません。接続のたびに講習会用のフォルダの認証情報を読み込みます。
 - 講師から自分の EC2 が作り直されたと案内された場合は、`ssh-config` をもう一度実行します。
-- 接続のたびに準備を行うため、`ssh gclue-ai-handson-<開催 ID>` も VS Code も、つながるまで少し時間がかかります。VS Code で接続がタイムアウトする場合は、VS Code の設定の `remote.SSH.connectTimeout` を大きく（例: `60`）します。
+- 接続のたびに準備を行うため、`ssh gclue-ai-handson-{{EVENT_ID}}` も VS Code も、つながるまで少し時間がかかります。VS Code で接続がタイムアウトする場合は、VS Code の設定の `remote.SSH.connectTimeout` を大きく（例: `60`）します。
 
 
 ## S3 の画面を開く場合
 
-受講者にはバケット一覧の権限がありません。一覧画面の `AccessDenied` は必ずしも認証失敗ではありません。講師からバケット名、リージョン、自分のプレフィックスを受け取り、サインインした同じブラウザで次の形式を開きます。山括弧の値を置き換えます。
+受講者にはバケット一覧の権限がありません。一覧画面の `AccessDenied` は必ずしも認証失敗ではありません。講師からバケット名、リージョン、自分のプレフィックスを受け取り、サインインした同じブラウザで次の形式を開きます。[共通値の設定](common.md)のバケット・リージョン・受講者 ID が反映された URL を使います。
 
 ```text
-https://s3.console.aws.amazon.com/s3/buckets/<BUCKET>?region=<REGION>&prefix=<ATTENDEE_ID>%2F&showversions=false
-https://s3.console.aws.amazon.com/s3/buckets/<BUCKET>?region=<REGION>&prefix=shared%2F&showversions=false
+https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&prefix={{ATTENDEE_ID}}%2F&showversions=false
+https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&prefix=shared%2F&showversions=false
 ```
 
 自分の領域と `shared/` の直接表示は実測済みです。画面でのダウンロード・書き込み・削除は未検証です。[CLI で保存と回収](save.md) を進めてください。`ListAllMyBuckets` 権限の追加は前提にしません。

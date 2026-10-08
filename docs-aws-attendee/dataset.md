@@ -1,5 +1,7 @@
 # 教材の取得と LeRobot のデータ確認
 
+最初に [共通値の設定](common.md) を開き、講師から受け取った値を入力してください。認証情報ファイルのパス・期限付き URL はフォームに保存せず、各コマンドの手動置換箇所で指定します。
+
 ## 1. 手元に現行教材を取得する
 
 **手元の PC** で講習会用の環境を有効化してから実行します。
@@ -37,11 +39,11 @@ uv run --no-sync lerobot-edit-dataset --help
 
 ## 3. データセットの場所を指定する
 
-講師から渡された値へ置き換えます。以下はシェル変数なので、このターミナル内で続けて使います。`<REPO_ID>` はバケット名や EC2 名ではなく、データセットの識別名です。
+[共通値の設定](common.md)のデータセットの場所と識別名を確認して、次を実行します。以下はシェル変数なので、このターミナル内で続けて使います。`{{DATASET_REPO_ID}}` はバケット名や EC2 名ではなく、データセットの識別名です。
 
 ```bash
-DATASET_DIR='<DATASET_DIR>'
-DATASET_REPO_ID='<REPO_ID>'
+DATASET_DIR={{DATASET_DIR_SH}}
+DATASET_REPO_ID={{DATASET_REPO_ID_SH}}
 ls "$DATASET_DIR/meta/info.json"
 ```
 
@@ -50,7 +52,7 @@ ls "$DATASET_DIR/meta/info.json"
 手元だけにデータがある場合は、講師に EC2 への配置を依頼するか、[SSH 設定](connect.md)を作成した後、**手元**からコピーできます。この `scp` による汎用手順は今回の実測対象外です。
 
 ```bash
-scp -r '<手元のデータセットフォルダ>' 'gclue-ai-handson-<開催 ID>:/home/ubuntu/lerobot/'
+scp -r '<手元のデータセットフォルダ>' 'gclue-ai-handson-{{EVENT_ID}}:/home/ubuntu/lerobot/'
 ```
 
 コピー後に EC2 で `meta/info.json` の存在を確認し、講師から受け取ったチェックサムで照合します。

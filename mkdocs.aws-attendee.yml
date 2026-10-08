@@ -4,12 +4,27 @@ site_dir: site-aws-attendee
 strict: true
 theme:
   name: material
+  custom_dir: theme-aws-attendee
   language: ja
+  palette:
+    primary: yellow
+    accent: black
+  logo: assets/logo.png
+  favicon: assets/favicon.png
 plugins:
-  - search
+- search
 markdown_extensions:
-  - admonition
-  - pymdownx.superfences
+- pymdownx.highlight:
+    use_pygments: true
+    noclasses: false
+    pygments_style: monokai
+    linenums: false
+- pymdownx.tabbed:
+    alternate_style: true
+- pymdownx.superfences
+- admonition
+- pymdownx.keys
+- attr_list
 validation:
   nav:
     omitted_files: warn
@@ -21,11 +36,18 @@ validation:
     absolute_links: warn
     unrecognized_links: warn
 nav:
-  - はじめに: index.md
-  - PC の準備と更新: setup.md
-  - 接続と Git: connect.md
-  - 教材とデータ確認: dataset.md
-  - 保存と回収: save.md
-  - 終了時の片付け: finish.md
-  - 困ったとき: troubleshooting.md
-  - 出典と検証範囲: verification.md
+- はじめに: index.md
+- 各種値の設定: common.md
+- PC の準備と更新: setup.md
+- 接続と Git: connect.md
+- 教材とデータ確認: dataset.md
+- 保存と回収: save.md
+- 終了時の片付け: finish.md
+- 困ったとき: troubleshooting.md
+- 出典と検証範囲: verification.md
+extra_css:
+- assets/custom.css
+- assets/lerobot_ports.css
+- assets/aws-values.css
+extra_javascript:
+- assets/aws-values.js
