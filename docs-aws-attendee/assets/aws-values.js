@@ -30,7 +30,10 @@
     instructor: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','PROFILE','CONFIG_DIR','RELEASE','MANIFEST_SHA','MATERIALS_DIR'],
     environment: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','PROFILE','CONFIG_DIR','ACCOUNT_ID','AMI_ID','INSTANCE_ID','INSTANCE_TYPE'],
   }[role];
-  const allowed = new Set(roleFields);
+  const allowed = new Set(Object.keys(fields));
+  const links = new WeakMap();
+  // Explicit documentation placeholders only; never classify arbitrary tags or redirects.
+  const manualTokens = new Set(["<...>", "<64 桁の英数字>", "<AMI の名前>", "<ID>", "<SSH 接続先>", "<YYYYMMDD>", "<subnet ID>", "<…>", "<アカウント>", "<インスタンス ID>", "<インスタンスプロファイル名>", "<インフラリポジトリの作業コピー>", "<キーの ARN>", "<コマンド>", "<スクリプト>", "<スタックのリージョン>", "<スナップショット ID>", "<セッション名>", "<ディレクトリ>", "<パス>", "<パッケージのバージョン>", "<パッチ ID>", "<フォルダ>", "<ブランチ>", "<ホスト>", "<ポート番号>", "<メールアドレス>", "<リポジトリ名>", "<ルートデバイス名>", "<ロググループ名>", "<一時的なインスタンス ID>", "<人数>", "<件数>", "<作成日>", "<作業名>", "<保存先>", "<元の AMI ID>", "<削除する AMI ID>", "<台数>", "<場所>", "<容量>", "<導入 URL>", "<導入スクリプトの URL>", "<手元のデータセットフォルダ>", "<手元のリポジトリのフォルダ>", "<数>", "<新しい AMI ID>", "<新しい認証情報ファイル>", "<新しい認証情報ファイルの絶対パス>", "<時刻>", "<準備用のスクリプト>", "<版>", "<用途>", "<秒>", "<表示名>", "<認証情報ファイル>", "<認証情報ファイルの絶対パス>", "<説明>", "{種類}"]);
   const originals = new WeakMap();
   const controls = new WeakMap();
   let state = {};
@@ -40,7 +43,7 @@
     state = {};
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
-      for (const key of roleFields) {
+      for (const key of allowed) {
         if (typeof saved[key] === 'string' && fields[key][1](saved[key])) state[key] = saved[key];
       }
     } catch { storageAvailable = false; }
@@ -77,15 +80,66 @@
     const ok = document.execCommand('copy'); input.remove();
     if (!ok) throw new Error('copy unavailable');
   }
+  function slots(text) {
+    const fragment = document.createDocumentFragment();
+    const regex = /\{\{([A-Z_]+?)(_SH|_YAML)?\}\}|<[^<>\n]+>|\{種類\}/g;
+    let offset = 0;
+    for (const match of text.matchAll(regex)) {
+      if (!match[1] && !manualTokens.has(match[0])) continue;
+      fragment.append(text.slice(offset, match.index));
+      const span = document.createElement('span');
+      span.className = 'aws-placeholder'; span.dataset.awsToken = match[0];
+      span.textContent = match[0]; fragment.append(span);
+      offset = match.index + match[0].length;
+    }
+    fragment.append(text.slice(offset));
+    return fragment;
+  }
   function refresh() {
     const article = document.querySelector('article');
     if (!article) return;
+    // Normalize highlighted code once so tokens split across syntax spans work too.
     for (const code of article.querySelectorAll('pre > code, :not(pre) > code')) {
       if (code.closest('.lerobot-port-panel, .aws-controls')) continue;
-      const original = template(code);
-      const rendered = render(original);
-      if (code.textContent !== rendered) code.textContent = rendered;
-      if (!code.closest('pre')) continue;
+      if (!originals.has(code)) {
+        const original = template(code);
+        if (original.includes('{{') || [...manualTokens].some(token => original.includes(token))) code.replaceChildren(slots(original));
+      }
+    }
+    const walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if ((node.textContent.includes('{{') || [...manualTokens].some(token => node.textContent.includes(token))) && !node.parentElement.closest('code, pre, script, style, textarea, .lerobot-port-panel, .aws-controls, .aws-placeholder')) nodes.push(node);
+    }
+    for (const node of nodes) node.replaceWith(slots(node.textContent));
+    for (const span of article.querySelectorAll('.aws-placeholder[data-aws-token]')) {
+      span.textContent = render(span.dataset.awsToken);
+      const key = span.dataset.awsToken.slice(2,-2).replace(/_(SH|YAML)$/, '');
+      span.classList.toggle('aws-placeholder-unset', !state[key]);
+      span.classList.toggle('aws-placeholder-manual', !allowed.has(key));
+    }
+    // Only explicit URL templates are interpolated, with encoded path/query values.
+    for (const link of article.querySelectorAll('a')) {
+      if (link.closest('.lerobot-port-panel, .aws-controls')) continue;
+      if (!links.has(link)) {
+        const href = link.getAttribute('href') || '';
+        if (!href.includes('{{')) continue;
+        links.set(link, href);
+      }
+      let complete = true;
+      const href = links.get(link).replace(/\{\{([A-Z_]+)\}\}/g, (token, key) => {
+        if (!allowed.has(key) || !state[key]) { complete = false; return token; }
+        return encodeURIComponent(state[key]);
+      });
+      let safe = false;
+      try { safe = ['https:', 'http:'].includes(new URL(href, location.href).protocol); } catch { /* invalid URL */ }
+      if (complete && safe && !href.includes('{{')) {
+        link.setAttribute('href', href); link.removeAttribute('aria-disabled');
+      } else { link.removeAttribute('href'); link.setAttribute('aria-disabled', 'true'); }
+    }
+    for (const code of article.querySelectorAll('pre > code')) {
+      if (code.closest('.lerobot-port-panel, .aws-controls')) continue;
       let ui = controls.get(code);
       if (!ui) {
         const wrapper = document.createElement('div'); wrapper.className = 'aws-controls';
@@ -100,17 +154,7 @@
         });
         ui = {button,status}; controls.set(code,ui);
       }
-      ui.status.textContent = unresolved(rendered) ? '未設定・手動置換の項目があります。値を確認してから実行してください。' : '';
-    }
-    const walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      if (!node.parentElement.closest('code, pre, script, style, .lerobot-port-panel, .aws-controls')) nodes.push(node);
-    }
-    for (const node of nodes) {
-      const original = template(node);
-      if (original.includes('{{')) node.textContent = render(original);
+      ui.status.textContent = unresolved(code.textContent) ? '未設定・手動置換の項目があります。値を確認してから実行してください。' : '';
     }
     for (const status of document.querySelectorAll('[data-aws-save-status]')) {
       status.textContent = storageAvailable
@@ -130,13 +174,13 @@
       const cell = document.createElement('div');
       const input = document.createElement('input'); input.id = label.htmlFor;
       input.className = 'lerobot-port-input'; input.value = state[key] || '';
-      input.dataset.awsField = key; input.type = 'text'; input.spellcheck = false; input.autocomplete = 'off';
+      input.dataset.awsField = key; input.type = 'text'; input.maxLength = 512; input.spellcheck = false; input.autocomplete = 'off';
       const hint = document.createElement('small'); hint.id = `${input.id}-hint`;
       hint.textContent = fields[key][2]; input.setAttribute('aria-describedby',hint.id);
       const error = document.createElement('div'); error.className = 'aws-error'; error.setAttribute('aria-live','polite');
       input.addEventListener('input', () => {
         const value = input.value;
-        const valid = value === '' || fields[key][1](value);
+        const valid = value === '' || (value.length <= 512 && fields[key][1](value));
         input.setAttribute('aria-invalid', String(!valid));
         error.textContent = valid ? '' : '形式を確認してください。この値は保存・反映しません。';
         delete state[key]; if (value && valid) state[key] = value;
@@ -149,11 +193,54 @@
     reset.className = 'lerobot-port-btn'; reset.textContent = '入力と保存をリセット';
     reset.addEventListener('click', () => {
       state = {}; save();
+      for (const status of document.querySelectorAll('[data-aws-transfer-status]')) status.textContent = '';
       for (const input of form.querySelectorAll('input')) { input.value = ''; input.setAttribute('aria-invalid','false'); }
       for (const error of form.querySelectorAll('.aws-error')) error.textContent = '';
       syncInputs(); refresh();
     });
-    actions.append(reset); form.append(actions);
+    const transferStatus = document.createElement('p');
+    transferStatus.dataset.awsTransferStatus = ''; transferStatus.setAttribute('role', 'status');
+    const reportTransfer = message => {
+      for (const el of document.querySelectorAll('[data-aws-transfer-status]')) el.textContent = message;
+    };
+    const file = document.createElement('input'); file.type = 'file'; file.accept = '.json,application/json';
+    file.hidden = true; file.dataset.awsImport = ''; file.setAttribute('aria-label', '設定JSONファイル');
+    const importButton = document.createElement('button'); importButton.type = 'button';
+    importButton.className = 'lerobot-port-btn'; importButton.textContent = 'インポート';
+    importButton.addEventListener('click', () => file.click());
+    file.addEventListener('change', async () => {
+      const selected = file.files[0]; if (!selected) return;
+      try {
+        if (selected.size > 65536) throw new Error('ファイルは64KB以内にしてください。');
+        const data = JSON.parse(await selected.text());
+        if (!data || data.format !== 'lerobot-aws-guide-settings' || data.version !== 1 || !data.values || typeof data.values !== 'object' || Array.isArray(data.values)) throw new Error('対応する形式・バージョンのJSONではありません。');
+        const accepted = [], retained = [], ignored = [], invalid = [];
+        const next = {...state};
+        for (const [key, value] of Object.entries(data.values)) {
+          if (!allowed.has(key)) { ignored.push(key); continue; }
+          if (typeof value !== 'string' || value.length > 512 || !fields[key][1](value)) { invalid.push(key); continue; }
+          next[key] = value; accepted.push(key);
+          if (!roleFields.includes(key)) retained.push(key);
+        }
+        state = next; save(); syncInputs(); refresh();
+        const names = keys => keys.length ? keys.join(', ') : 'なし';
+        reportTransfer(`採用 ${accepted.length}件（${names(accepted)}）。うち他の役割用に保持: ${names(retained)}。未対応として無視: ${names(ignored)}。不正値として無視: ${names(invalid)}。ファイルにない既存設定は維持しました。`);
+      } catch (error) {
+        reportTransfer(`インポートできませんでした。既存設定は維持しました。${error instanceof SyntaxError ? 'JSONの構文を確認してください。' : error.message}`);
+      } finally { file.value = ''; }
+    });
+    const exportButton = document.createElement('button'); exportButton.type = 'button';
+    exportButton.className = 'lerobot-port-btn'; exportButton.textContent = 'エクスポート';
+    exportButton.addEventListener('click', () => {
+      const data = {format: 'lerobot-aws-guide-settings', version: 1, values: state};
+      const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2) + '\n'], {type: 'application/json'}));
+      const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'lerobot-aws-guide-settings.json';
+      document.body.append(anchor); anchor.click(); anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      reportTransfer(`有効な設定 ${Object.keys(state).length}件をエクスポートしました。他の役割用に保持した値も含みます。`);
+    });
+    actions.append(importButton, exportButton, reset, file); form.append(actions, transferStatus);
+
     const status = document.createElement('p'); status.dataset.awsSaveStatus = ''; status.setAttribute('role','status');
     host.append(form,status);
   }

@@ -19,3 +19,10 @@
 .aws-dialog-heading button {flex-shrink:0;}
 .aws-values-dialog > p {font-size:.75rem;}
 @media(max-width:650px){.aws-settings-trigger {font-size:.6rem;margin:0 .25rem;padding:.25rem;}.aws-values-dialog {width:calc(100vw - 1rem);max-height:calc(100dvh - 1rem);padding:0 .75rem .75rem;}.aws-values-dialog .lerobot-port-row {grid-template-columns:1fr;}}
+
+/* Generated content marks slots before and after substitution, never command text. */
+.aws-placeholder::before { content: " 📝 "; user-select: none; }
+.aws-placeholder { background: rgba(255, 193, 7, .13); border-bottom: 1px dotted currentColor; }
+.aws-placeholder-unset { background: rgba(255, 152, 0, .18); }
+a[aria-disabled="true"] { cursor: default; }
+[data-aws-transfer-status] { overflow-wrap: anywhere; }
