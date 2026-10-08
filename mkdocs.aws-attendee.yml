@@ -37,13 +37,24 @@ validation:
     unrecognized_links: warn
 nav:
 - はじめに: index.md
-- LeRobot実習とAWS連携: aws-workflow.md
-- 各種値の設定: common.md
-- PC の準備と更新: setup.md
-- 接続と Git: connect.md
-- 教材とデータ確認: dataset.md
-- 保存と回収: save.md
-- 終了時の片付け: finish.md
+- LeRobot:
+  - 実習の進め方: aws-workflow.md
+  - 接続の確認: lerobot/check.md
+  - 各種値の設定: common.md
+  - キャリブレーション: lerobot/calibration.md
+  - カメラの調整: lerobot/camera.md
+  - データセットの収集: lerobot/collect.md
+  - データセットの編集: lerobot/edit.md
+  - 学習: lerobot/train.md
+  - 推論の実行: lerobot/run.md
+- AWS連携:
+  - PC の準備と更新: setup.md
+  - 接続と Git: connect.md
+  - 教材とデータ確認: dataset.md
+  - AWS へのデータ転送: aws-transfer.md
+  - AWS からのモデル回収: aws-model-recovery.md
+  - 保存と回収: save.md
+  - 終了時の片付け: finish.md
 - 困ったとき: troubleshooting.md
 - 出典と検証範囲: verification.md
 extra_css:
