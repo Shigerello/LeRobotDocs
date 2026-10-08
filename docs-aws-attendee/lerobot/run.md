@@ -7,7 +7,7 @@
 - ロボットの周囲から障害物を取り除きます。
 - いつでも Ctrl+C で停止できる状態にします。
 - カメラ位置、照明、物体、背景、初期姿勢を収集時に合わせます。
-- 収集と同じ機器 ID、カメラ名 `front`、タスク文を使います。
+- 収集と同じ機器 ID、2台のカメラ名 `front` と `wrist`、タスク文を使います。
 - 最初は10秒だけ、録画なしで確認します。
 
 回収した Policy の設定とモデルファイルを確認します。
@@ -17,6 +17,8 @@ test -f "$POLICY_PATH/config.json"
 find "$POLICY_PATH" -maxdepth 1 -type f \
   -name '*.safetensors' -print
 ```
+
+`config.json` の画像入力が `observation.images.front` と `observation.images.wrist` の2台構成であることも確認します。1台構成で学習したモデルは使わず、2台構成のデータで学習したモデルを使います。
 
 `config.json` と `.safetensors` の両方を確認できなければ進まず、実際のチェックポイントの場所を講師と確認します。
 

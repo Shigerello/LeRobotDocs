@@ -83,7 +83,7 @@ uv run --no-sync lerobot-edit-dataset \
   --operation.type info
 ```
 
-エピソード数、フレーム数、FPS、タスクを収集時の記録と照合します。DCV の Terminal では、次で Rerun を表示します。
+エピソード数、フレーム数、FPS、タスクと、`front`・`wrist` の2台の映像を収集時の記録と照合します。DCV の Terminal では、次で Rerun を表示します。
 
 ```bash
 uv run --no-sync rerun "$DATASET_DIR"

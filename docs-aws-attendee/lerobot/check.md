@@ -47,15 +47,17 @@ cd "$PROJECT_DIR"
 lerobot-find-cameras opencv
 ```
 
-Jetson の `/dev/video0` を使う場合は、640×480、MJPG、30 FPS に対応していることを確認します。
+前方カメラと手首カメラの2台を接続し、検出結果と実際の映像で対応を確認します。Jetson の `/dev/video0` と `/dev/video2` を使う例では、両方が640×480、MJPG、30 FPSに対応していることを確認します。
 
 ```bash
-v4l2-ctl -d /dev/video0 --list-formats-ext
-v4l2-ctl -d /dev/video0 --get-fmt-video
-v4l2-ctl -d /dev/video0 --get-parm
+for CAMERA_PATH in /dev/video0 /dev/video2; do
+  v4l2-ctl -d "$CAMERA_PATH" --list-formats-ext
+  v4l2-ctl -d "$CAMERA_PATH" --get-fmt-video
+  v4l2-ctl -d "$CAMERA_PATH" --get-parm
+done
 ```
 
-別のカメラの場合は検出結果に合わせます。次の [カメラの調整](camera.md)で、収集・推論に使うカメラ設定を用意します。
+番号は接続環境で変わります。2台が別々の機器であることを確認し、同じカメラの別ノードを2台として指定しないでください。Macでも2台の検出番号と映像を確認します。次の [カメラの調整](camera.md)で、収集・推論に使うカメラ設定を用意します。
 
 ## リファレンス
 
@@ -70,6 +72,6 @@ v4l2-ctl -d /dev/video0 --get-parm
 
 ## 講師：接続確認の到達確認
 
-LeaderとFollowerのポート、カメラ番号を本人と確認します。複数組の機器を取り違えず、各組の対応を控えます。
+LeaderとFollowerのポート、2台のカメラの番号と映像を本人と確認します。複数組の機器を取り違えず、各組の対応を控えます。
 
 {% endif %}
