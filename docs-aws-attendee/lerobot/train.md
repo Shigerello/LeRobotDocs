@@ -14,7 +14,7 @@ print(torch.__version__, torch.cuda.is_available())
 PY
 ```
 
-学習対象のデータに `observation.images.front` と `observation.images.wrist` の両方が含まれ、2台の映像が正しく対応していることを確認します。配布データを使う場合も同じ2台構成のデータを選びます。
+学習対象のデータに `observation.images.front` と `observation.images.side` の両方が含まれ、2台の映像が正しく対応していることを確認します。配布データを使う場合も同じ2台構成のデータを選びます。
 
 GPU が表示され、PyTorch の結果が `True` なら、まず5000ステップで確認します。出力先は実行日時付きで作り、過去の成果を削除しません。
 

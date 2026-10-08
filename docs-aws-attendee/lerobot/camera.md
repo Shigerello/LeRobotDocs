@@ -4,7 +4,7 @@
 
 ## 1. データセット収集（1回）
 
-前方の `front` と手首の `wrist` の2台で、まず1エピソード、10秒の映像と動作を確認します。本収集と分けたテスト専用の保存先を使います。既にテストデータがある場合は、保存先の名前を変えてください。
+前方の `front` と側面の `side` の2台で、まず1エピソード、10秒の映像と動作を確認します。本収集と分けたテスト専用の保存先を使います。既にテストデータがある場合は、保存先の名前を変えてください。
 
 ```bash
 TEST_DATASET_DIR="${LOCAL_DATASET_DIR}_camera_test"
@@ -12,13 +12,13 @@ TEST_DATASET_DIR="${LOCAL_DATASET_DIR}_camera_test"
 
 === "Jetson"
 
-    `front` を `/dev/video0`、`wrist` を `/dev/video2` とした例です。両方とも640×480、MJPG、30 FPSに対応する機器を使います。検出結果が異なる場合は講師と値を合わせます。SSH で操作する場合は GUI 表示を無効にします。
+    `front` を `/dev/video0`、`side` を `/dev/video2` とした例です。両方とも640×480、MJPG、30 FPSに対応する機器を使います。検出結果が異なる場合は講師と値を合わせます。SSH で操作する場合は GUI 表示を無効にします。
 
     ```bash
     CAMERAS="{front: {type: opencv, index_or_path: '/dev/video0',"
     CAMERAS+=" backend: 200, width: 640, height: 480, fps: 30,"
     CAMERAS+=" fourcc: 'MJPG'},"
-    CAMERAS+=" wrist: {type: opencv, index_or_path: '/dev/video2',"
+    CAMERAS+=" side: {type: opencv, index_or_path: '/dev/video2',"
     CAMERAS+=" backend: 200, width: 640, height: 480, fps: 30,"
     CAMERAS+=" fourcc: 'MJPG'}}"
     DEVICE=cuda
@@ -27,12 +27,12 @@ TEST_DATASET_DIR="${LOCAL_DATASET_DIR}_camera_test"
 
 === "Mac"
 
-    `front` をカメラ番号 `0`、`wrist` を `2` とした例です。検出結果と映像を確認し、それぞれの番号を合わせます。MJPGは固定しません。デスクトップのターミナルを使います。
+    `front` をカメラ番号 `0`、`side` を `2` とした例です。検出結果と映像を確認し、それぞれの番号を合わせます。MJPGは固定しません。デスクトップのターミナルを使います。
 
     ```bash
     CAMERAS='{front: {type: opencv, index_or_path: 0,'
     CAMERAS+=' width: 640, height: 480, fps: 30},'
-    CAMERAS+=' wrist: {type: opencv, index_or_path: 2,'
+    CAMERAS+=' side: {type: opencv, index_or_path: 2,'
     CAMERAS+=' width: 640, height: 480, fps: 30}}'
     DEVICE=mps
     DISPLAY_DATA=true
@@ -62,7 +62,7 @@ lerobot-record \
 
 ## 2.Rerunを起動
 
-手元のデスクトップのターミナルでテストデータを表示し、`front` と `wrist` の両方の映像が記録されていることを確認します。2台の名前・向き・画角は本収集と推論でも揃えます。
+手元のデスクトップのターミナルでテストデータを表示し、`front` と `side` の両方の映像が記録されていることを確認します。2台の名前・向き・画角は本収集と推論でも揃えます。
 
 ```bash
 lerobot-dataset-viz \
@@ -100,6 +100,6 @@ rm -ri -- "$TEST_DATASET_DIR"
 
 ## 講師：カメラの確認の到達確認
 
-テスト収集で `front` と `wrist` の2映像、名前とカメラの向きを確認します。削除するのはテストデータで、実習用データセットとは分けます。
+テスト収集で `front` と `side` の2映像、名前とカメラの向きを確認します。削除するのはテストデータで、実習用データセットとは分けます。
 
 {% endif %}

@@ -47,7 +47,7 @@ cd "$PROJECT_DIR"
 lerobot-find-cameras opencv
 ```
 
-前方カメラと手首カメラの2台を接続し、検出結果と実際の映像で対応を確認します。Jetson の `/dev/video0` と `/dev/video2` を使う例では、両方が640×480、MJPG、30 FPSに対応していることを確認します。
+前方カメラと側面カメラの2台を接続し、検出結果と実際の映像で対応を確認します。Jetson の `/dev/video0` と `/dev/video2` を使う例では、両方が640×480、MJPG、30 FPSに対応していることを確認します。
 
 ```bash
 for CAMERA_PATH in /dev/video0 /dev/video2; do

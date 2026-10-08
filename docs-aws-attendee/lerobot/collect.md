@@ -1,6 +1,6 @@
 # データセットの収集
 
-実行場所: **手元の Jetson／Mac**。[カメラの調整](camera.md)で設定した `CAMERAS`、`DEVICE`、`DISPLAY_DATA` と、[接続の確認](check.md)の各変数を使います。2台のカメラ名 `front` と `wrist`、それぞれの位置・解像度・FPS、タスクは収集と推論で合わせます。
+実行場所: **手元の Jetson／Mac**。[カメラの調整](camera.md)で設定した `CAMERAS`、`DEVICE`、`DISPLAY_DATA` と、[接続の確認](check.md)の各変数を使います。2台のカメラ名 `front` と `side`、それぞれの位置・解像度・FPS、タスクは収集と推論で合わせます。
 
 ## 1. データセット収集（新規）
 
@@ -74,6 +74,6 @@ lerobot-record \
 
 ## 講師：収集結果の到達確認
 
-新規収集・追加収集のエピソード数、`front` と `wrist` の映像、保存先を確認してからAWSへ転送します。
+新規収集・追加収集のエピソード数、`front` と `side` の映像、保存先を確認してからAWSへ転送します。
 
 {% endif %}
