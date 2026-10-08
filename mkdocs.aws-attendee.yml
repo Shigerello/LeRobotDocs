@@ -37,6 +37,7 @@ validation:
     unrecognized_links: warn
 nav:
 - はじめに: index.md
+- LeRobot実習とAWS連携: aws-workflow.md
 - 各種値の設定: common.md
 - PC の準備と更新: setup.md
 - 接続と Git: connect.md
