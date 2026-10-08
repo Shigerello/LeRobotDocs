@@ -184,7 +184,8 @@ gclue-ai-handson-attendee env update
 期限が切れたときや、講師から新しい認証情報ファイルを受け取ったときは、次のコマンドで入れ替えます。
 
 ```bash
-gclue-ai-handson-attendee env credentials --env-file '<新しい認証情報ファイルの絶対パス>'
+gclue-ai-handson-attendee env credentials \
+  --env-file '<新しい認証情報ファイルの絶対パス>'
 ```
 
 - `<新しい認証情報ファイル>`: 新しく受け取った `{{ATTENDEE_ID}}.env` のパス。

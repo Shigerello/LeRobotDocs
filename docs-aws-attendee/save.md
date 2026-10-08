@@ -30,7 +30,10 @@ source /tmp/gclue-ai-handson-{{EVENT_ID}}-{{ATTENDEE_ID}}.env
 ```
 
 ```bash
-aws s3 cp --recursive ./checkpoints "s3://$GCLUE_AI_HANDSON_BUCKET/$GCLUE_AI_HANDSON_ATTENDEE/models/day1/checkpoints/"
+S3_DEST="s3://$GCLUE_AI_HANDSON_BUCKET/$GCLUE_AI_HANDSON_ATTENDEE/mod"
+S3_DEST+="els/day1/checkpoints/"
+
+aws s3 cp --recursive ./checkpoints "$S3_DEST"
 ```
 
 - 認証情報ファイルの場所は、講師から別の場所を案内された場合はそれに従います。
@@ -43,7 +46,8 @@ aws s3 cp --recursive ./checkpoints "s3://$GCLUE_AI_HANDSON_BUCKET/$GCLUE_AI_HAN
 自分専用の場所に保存した成果を、手元の機器に取得します。
 
 ```bash
-gclue-ai-handson-attendee files pull --own --prefix models/day1 --dest ./recovered
+gclue-ai-handson-attendee files pull --own --prefix models/day1 \
+  --dest ./recovered
 ```
 
 - `--own`: 自分専用の場所から取得します。
@@ -62,7 +66,8 @@ mkdir -p ~/handson-save-check
 cd ~/handson-save-check
 printf "handson save check\n" > proof.txt
 gclue-ai-handson-attendee files upload ./proof.txt --to checks/day1
-gclue-ai-handson-attendee files pull --own --prefix checks/day1 --dest ./downloaded
+gclue-ai-handson-attendee files pull --own --prefix checks/day1 \
+  --dest ./downloaded
 cmp proof.txt downloaded/proof.txt
 ```
 

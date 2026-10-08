@@ -15,7 +15,8 @@ gclue-ai-handson-attendee files pull --dest ./materials
 共有データセットは、講師が指定したプレフィックスを指定します。次の `datasets/` は配置例です。
 
 ```bash
-gclue-ai-handson-attendee files pull --prefix datasets/ --dest ./datasets
+gclue-ai-handson-attendee files pull --prefix datasets/ \
+  --dest ./datasets
 ```
 
 これは共有領域 `shared/datasets/` の取得です。現行教材取得と違い、任意の `--prefix` 取得に manifest の SHA 検証が必ず付くわけではありません。講師のチェックサム表があれば別に照合してください。
@@ -52,7 +53,8 @@ ls "$DATASET_DIR/meta/info.json"
 手元だけにデータがある場合は、講師に EC2 への配置を依頼するか、[SSH 設定](connect.md)を作成した後、**手元**からコピーできます。この `scp` による汎用手順は今回の実測対象外です。
 
 ```bash
-scp -r '<手元のデータセットフォルダ>' 'gclue-ai-handson-{{EVENT_ID}}:/home/ubuntu/lerobot/'
+scp -r '<手元のデータセットフォルダ>' \
+  'gclue-ai-handson-{{EVENT_ID}}:/home/ubuntu/lerobot/'
 ```
 
 コピー後に EC2 で `meta/info.json` の存在を確認し、講師から受け取ったチェックサムで照合します。
