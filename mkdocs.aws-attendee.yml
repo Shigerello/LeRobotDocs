@@ -1,0 +1,31 @@
+site_name: LeRobot AWS 講習会・受講者ガイド
+docs_dir: docs-aws-attendee
+site_dir: site-aws-attendee
+strict: true
+theme:
+  name: material
+  language: ja
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: warn
+    unrecognized_links: warn
+nav:
+  - はじめに: index.md
+  - PC の準備と更新: setup.md
+  - 接続と Git: connect.md
+  - 教材とデータ確認: dataset.md
+  - 保存と回収: save.md
+  - 終了時の片付け: finish.md
+  - 困ったとき: troubleshooting.md
+  - 出典と検証範囲: verification.md
