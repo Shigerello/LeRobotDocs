@@ -56,3 +56,59 @@ mkdocs build --strict -f mkdocs.aws-attendee.yml
 AWSプロファイルもコマンド内では `{{PROFILE_SH}}`、YAML設定内では `{{PROFILE_YAML}}` として引用します。ID形式は参照元contractに合わせ、開催ID末尾ハイフンと受講者IDの予約語 `shared` は受け付けません。
 
 全ページのヘッダーボタンからネイティブdialogを開き、設定ページと同じstateで双方向同期します。閉じる/Escape・フォーカス復帰・背景へのフォーカス移動抑止・狭い画面の内部スクロールも検証対象です。参考: `rd08-vfp-ai-exp-core/dist/guides/10_ガイド/AI実験_ガイド_PoC環境構築手順/` の全ページ共通モーダル（参照のみ）。
+
+
+### 受講者版と講習会側版の静的テンプレート
+
+共通本文は `docs-aws-attendee/` の同じMarkdownを使います。
+`mkdocs-macros-plugin` のJinja2でビルド時に担当者手順を差し込みます。
+章・ページの出し分けはブラウザのJavaScriptには依存しません。
+
+```bash
+# 受講者版: site-aws-attendee/
+mkdocs build --strict -f mkdocs.aws-attendee.yml
+
+# 講習会側版: site-aws-staff/
+mkdocs build --strict -f mkdocs.aws-staff.yml
+mkdocs serve -f mkdocs.aws-staff.yml -a 127.0.0.1:8004
+```
+
+- 受講者版は `extra.audience: attendee`。担当者の差し込みを省き、
+  `staff/` の参照ページとスクリプトも出力対象から外します。
+- 講習会側版は `extra.audience: staff`。受講者版の設定を `INHERIT`
+  し、共通の章立てに事前準備・担当者の参照を加えます。
+- 共通の受講者操作を直す場合は、通常の手順ページを編集します。
+- 担当者手順は `guide-includes/` の部分Markdownを編集します。
+  差し込み箇所と `staff/` の全文参照は同じ部分ファイルを使います。
+  元資料の版・部分ファイル一覧は `guide-includes/sources.json` に記録。
+  他の作業コピーからの自動同期は行いません。
+- `aws_guide_macros.py` は相対リンクの解決と見出し階層の調整だけを
+  担当します。シェルコマンドは実行しません。
+
+差し込みの記法（リンクマクロはJinja用の区切り文字を使用）:
+
+```jinja
+{% if audience == "staff" %}
+## 講師：導入前の認証情報の発行
+
+{% filter staff_headings %}
+{% include 'instructor/operations/06.md' %}
+{% endfilter %}
+{% endif %}
+```
+
+共通部分ファイルのリンクは、例えば以下のように記述します。
+呼び出したページの場所に合わせて相対パスがビルド時に決まります。
+
+```jinja
+[共通設定](<<= guide_link('common.md') =>>)
+```
+
+Jinja変数は `<<= ... =>>`、コメントは `{## ... ##}` を使います。
+既存のブラウザ値置換 `{{EVENT_ID}}`、Markdownの `{#anchor}`、
+シェルのheredocやJMESPathの二重角括弧と衝突しない設定です。
+未定義のJinja変数やテンプレートのエラーはビルドを失敗させます。
+
+閲覧中の値入力・インポート・エクスポート・コピーは引き続きJSです。
+講習会側版の値は `lerobot.aws-guide.staff.v1` に保存します。
+認証情報発行・撤去等は手順を掲載しただけで、AWS操作はしていません。

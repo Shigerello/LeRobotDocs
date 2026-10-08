@@ -95,6 +95,18 @@ ssh -V
 git --version
 ```
 
+{% if audience == "staff" %}
+
+## 講師：導入前の認証情報の発行
+
+以下は講師の運用環境で実行します。受講者に導入URLと本人の認証ファイルを渡してから、受講者の導入手順へ進みます。
+
+{% filter staff_headings %}
+{% include 'instructor/operations/06.md' %}
+{% endfilter %}
+
+{% endif %}
+
 ## 2. 講習会用の環境を用意する
 
 導入スクリプトを取得して実行すると、講習会用のコマンドと講義資料が 1 つのフォルダ（既定は `~/gclue-ai-handson/{{EVENT_ID}}/`）にまとめて用意されます。
@@ -200,3 +212,15 @@ source ~/gclue-ai-handson/{{EVENT_ID}}/activate
 
 
 次は [EC2 への接続](connect.md) に進みます。
+
+{% if audience == "staff" %}
+
+## 講師：導入・更新後の確認
+
+本人の開催ID・受講者ID・有効期限を確認します。
+
+{% filter staff_headings %}
+{% include 'instructor/support/01.md' %}
+{% endfilter %}
+
+{% endif %}

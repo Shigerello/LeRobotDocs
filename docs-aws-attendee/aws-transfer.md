@@ -95,3 +95,11 @@ uv run --no-sync rerun "$DATASET_DIR"
 ---
 
 [前へ: データセットの収集](lerobot/collect.md) · [次へ: データセットの編集](lerobot/edit.md)
+
+{% if audience == "staff" %}
+
+## 講師：AWSへの転送の到達確認
+
+本人のS3 prefix・EC2を確認し、SHA-256と展開先、情報表示と映像確認を記録します。認証切れは再発行してPCとEC2それぞれで読み込み直します。
+
+{% endif %}

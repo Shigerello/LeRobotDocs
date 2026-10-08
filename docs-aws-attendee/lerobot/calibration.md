@@ -46,3 +46,11 @@ Follower が Leader に追従することを確認し、Ctrl+C で終了しま�
 ---
 
 [前へ: 接続の確認](check.md) · [次へ: カメラの調整](camera.md)
+
+{% if audience == "staff" %}
+
+## 講師：キャリブレーションの到達確認
+
+各受講者のLeaderとFollowerのキャリブレーション完了を確認してからテレオペレーションへ進みます。
+
+{% endif %}

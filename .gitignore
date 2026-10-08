@@ -1,3 +1,5 @@
 site/
 .DS_Store
 /site-aws-attendee/
+/site-aws-staff/
+__pycache__/

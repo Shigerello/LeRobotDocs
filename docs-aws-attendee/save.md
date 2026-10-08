@@ -76,3 +76,15 @@ cmp proof.txt downloaded/proof.txt
 EC2 で AWS CLI を使うときは、講師が用意した一時認証情報を読み込んでから実行し、有効期限切れなら再配布を依頼してください。`aws s3 cp` の成功だけで回収完了とせず、手元へ戻したファイルのサイズ・ハッシュまたは `cmp` も確認します。
 
 次は [終了時の片付け](finish.md) です。
+
+{% if audience == "staff" %}
+
+## 講師：成果回収の確認
+
+以下の受講者側の回収を全員分確認してから、認証失効・撤去へ進みます。
+
+{% filter staff_headings %}
+{% include 'instructor/closing/01.md' %}
+{% endfilter %}
+
+{% endif %}

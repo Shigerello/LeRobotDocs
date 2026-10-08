@@ -49,3 +49,11 @@
 | AWS CLI | 2.37.10 |
 
 この一覧は最新推奨版の主張ではなく、検証した組合せの記録です。環境構築は講師・構築担当者が行い、受講者は途中で依存を入れ替えません。
+
+{% if audience == "staff" %}
+
+## 講習会側：担当者手順の出典と確認範囲
+
+[講師の検証範囲](staff/instructor/verification.md)と[環境構築担当者の検証範囲](staff/environment/verification.md)も確認します。元資料の実測済み・未実施の区別を維持しています。
+
+{% endif %}

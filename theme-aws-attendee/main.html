@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block extrahead %}
 {{ super() }}
-<meta name="aws-guide-role" content="attendee">
+<meta name="aws-guide-role" content="{{ config.extra.audience }}">
 {% endblock %}
 {% block header %}
 {{ super() }}
-<div class="aws-role-banner">AWS 講習会 · 受講者ガイド</div>
+<div class="aws-role-banner">AWS 講習会 · {% if config.extra.audience == "staff" %}講習会側ガイド{% else %}受講者ガイド{% endif %}</div>
 {% endblock %}

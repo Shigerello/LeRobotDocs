@@ -70,3 +70,11 @@ lerobot-record \
 ---
 
 [前へ: カメラの調整](camera.md) · [次へ: AWS へのデータ転送](../aws-transfer.md)
+
+{% if audience == "staff" %}
+
+## 講師：収集結果の到達確認
+
+新規収集・追加収集のエピソード数、映像、保存先を確認してからAWSへ転送します。
+
+{% endif %}

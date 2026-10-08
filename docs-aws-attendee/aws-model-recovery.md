@@ -55,3 +55,11 @@ POLICY_PATH="$LOCAL_MODEL_DIR/checkpoints/last/pretrained_model"
 ---
 
 [前へ: 学習](lerobot/train.md) · [次へ: 推論の実行](lerobot/run.md)
+
+{% if audience == "staff" %}
+
+## 講師：モデルの回収の到達確認
+
+checkpoints全体とlastリンクが保持され、SHA-256が一致したことを確認します。手元でモデルのconfigを確認するまではEC2の削除へ進みません。
+
+{% endif %}

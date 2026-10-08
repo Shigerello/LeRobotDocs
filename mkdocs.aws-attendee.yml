@@ -13,6 +13,15 @@ theme:
   favicon: assets/favicon.png
 plugins:
 - search
+- macros:
+    module_name: aws_guide_macros
+    include_dir: guide-includes
+    j2_variable_start_string: <<=
+    j2_variable_end_string: =>>
+    on_undefined: strict
+    on_error_fail: true
+    j2_comment_start_string: '{##'
+    j2_comment_end_string: '##}'
 markdown_extensions:
 - pymdownx.highlight:
     use_pygments: true
@@ -63,3 +72,11 @@ extra_css:
 - assets/aws-values.css
 extra_javascript:
 - assets/aws-values.js
+extra:
+  audience: attendee
+exclude_docs: 'staff/
+
+  '
+watch:
+- guide-includes
+- aws_guide_macros.py

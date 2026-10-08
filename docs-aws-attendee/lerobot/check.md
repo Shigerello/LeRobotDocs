@@ -65,3 +65,11 @@ v4l2-ctl -d /dev/video0 --get-parm
 ---
 
 [実習の進め方](../aws-workflow.md) · [次へ: キャリブレーション](calibration.md)
+
+{% if audience == "staff" %}
+
+## 講師：接続確認の到達確認
+
+LeaderとFollowerのポート、カメラ番号を本人と確認します。複数組の機器を取り違えず、各組の対応を控えます。
+
+{% endif %}

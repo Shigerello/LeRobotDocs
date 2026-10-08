@@ -30,3 +30,35 @@
 
 講習会用のフォルダの外には書き込んでいないため、これで片付けは終わりです。
 [PC の準備](setup.md)で入れたソフトウェアは、ほかに使わなければアンインストールしてかまいません。
+
+{% if audience == "staff" %}
+
+## 講師：全員の回収後の片付け
+
+未回収者がいないことを確認してから実施し、結果を環境構築担当者へ渡します。
+
+{% filter staff_headings %}
+{% include 'instructor/closing/02.md' %}
+{% endfilter %}
+
+{% filter staff_headings %}
+{% include 'instructor/closing/03.md' %}
+{% endfilter %}
+
+{% endif %}
+
+{% if audience == "staff" %}
+
+## 環境構築担当者：環境の撤去
+
+講師から回収・失効・バックアップの確認結果を受け取ってから実施します。再利用するAMIは開催環境の撤去と分けます。
+
+{% filter staff_headings %}
+{% include 'environment/procedures/environment/11.md' %}
+{% endfilter %}
+
+{% filter staff_headings %}
+{% include 'environment/procedures/environment/12.md' %}
+{% endfilter %}
+
+{% endif %}

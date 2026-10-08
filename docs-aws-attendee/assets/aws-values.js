@@ -4,7 +4,7 @@
 (() => {
   'use strict';
   const role = document.querySelector('meta[name="aws-guide-role"]')?.content;
-  if (!['attendee', 'instructor', 'environment'].includes(role)) return;
+  if (!['attendee', 'instructor', 'environment', 'staff'].includes(role)) return;
   const storageKey = `lerobot.aws-guide.${role}.v1`;
   const atom = /^[A-Za-z0-9][A-Za-z0-9_.-]*$/;
   const path = value => value.length <= 512 && !/[\x00-\x1f\x7f]/.test(value) && !value.startsWith('~') && !value.includes('://') && /^(?:\/|\.\/|[A-Za-z0-9])/.test(value);
@@ -29,6 +29,7 @@
     attendee: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','DATASET_DIR','DATASET_REPO_ID'],
     instructor: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','PROFILE','CONFIG_DIR','RELEASE','MANIFEST_SHA','MATERIALS_DIR'],
     environment: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','PROFILE','CONFIG_DIR','ACCOUNT_ID','AMI_ID','INSTANCE_ID','INSTANCE_TYPE'],
+    staff: Object.keys(fields),
   }[role];
   const allowed = new Set(Object.keys(fields));
   const links = new WeakMap();

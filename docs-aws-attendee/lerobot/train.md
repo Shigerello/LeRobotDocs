@@ -74,3 +74,11 @@ uv run --no-sync lerobot-train \
 ---
 
 [前へ: データセットの編集](edit.md) · [次へ: AWS からのモデル回収](../aws-model-recovery.md)
+
+{% if audience == "staff" %}
+
+## 講師：学習前の環境の到達確認
+
+GPU学習は未検証です。同じデータ・版・EC2での事前試験、GPUと依存、保存先、実行時間を確認してから開始します。学習なしコースでは情報表示とRerunで終了します。
+
+{% endif %}

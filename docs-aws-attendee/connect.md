@@ -220,3 +220,19 @@ git log -2 --oneline
 `local` と `ec2` の 2 行、両方のコミットが確認できれば成功です。認証情報・データセット・巨大なモデルはこの練習リポジトリへ追加しません。
 
 次は [教材の取得と LeRobot の表示](dataset.md) に進みます。
+
+{% if audience == "staff" %}
+
+## 講師：接続の到達確認
+
+受講者本人の画面で、接続先・ログインユーザー・終了方法を順に確認します。
+
+{% filter staff_headings %}
+{% include 'instructor/support/02.md' %}
+{% endfilter %}
+
+{% filter staff_headings %}
+{% include 'instructor/support/04.md' %}
+{% endfilter %}
+
+{% endif %}

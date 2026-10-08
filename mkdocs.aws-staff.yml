@@ -1,0 +1,48 @@
+INHERIT: mkdocs.aws-attendee.yml
+site_name: LeRobot AWS 講習会・講習会側ガイド
+site_dir: site-aws-staff
+exclude_docs: ''
+extra:
+  audience: staff
+theme:
+  palette:
+    primary: indigo
+    accent: black
+nav:
+- はじめに: index.md
+- 講習会側の準備: staff/preparation.md
+- LeRobot:
+  - 実習の進め方: aws-workflow.md
+  - 接続の確認: lerobot/check.md
+  - 各種値の設定: common.md
+  - キャリブレーション: lerobot/calibration.md
+  - カメラの調整: lerobot/camera.md
+  - データセットの収集: lerobot/collect.md
+  - データセットの編集: lerobot/edit.md
+  - 学習: lerobot/train.md
+  - 推論の実行: lerobot/run.md
+- AWS連携:
+  - PC の準備と更新: setup.md
+  - 接続と Git: connect.md
+  - 教材とデータ確認: dataset.md
+  - AWS へのデータ転送: aws-transfer.md
+  - AWS からのモデル回収: aws-model-recovery.md
+  - 保存と回収: save.md
+  - 終了時の片付け: finish.md
+- 困ったとき: troubleshooting.md
+- 出典と検証範囲: verification.md
+- 担当者向け参照:
+  - 講師:
+    - 終了チェック: staff/instructor/closing.md
+    - 運用の約束: staff/instructor/contracts.md
+    - 開始条件: staff/instructor/index.md
+    - 運用手順: staff/instructor/operations.md
+    - 受講者サポート: staff/instructor/support.md
+    - 検証範囲: staff/instructor/verification.md
+  - 環境構築:
+    - 開始条件: staff/environment/index.md
+    - 構築と撤去: staff/environment/procedures/environment.md
+    - 引き渡し: staff/environment/handoff.md
+    - インフラ構成: staff/environment/specs/infrastructure.md
+    - アクセス制御: staff/environment/specs/access-control.md
+    - 検証範囲: staff/environment/verification.md

@@ -67,3 +67,31 @@ git submodule update --init
 ```
 
 エラーなく終了したら、[Git で EC2 へ送る手順](connect.md)へ戻り、Git push をやり直します。
+
+{% if audience == "staff" %}
+
+## 講師：運用上の問題
+
+担当者用コマンドは講師の運用環境で実行します。
+
+{% filter staff_headings %}
+{% include 'instructor/operations/10.md' %}
+{% endfilter %}
+
+{% endif %}
+
+{% if audience == "staff" %}
+
+## 環境構築担当者：開催中の変更と切り分け
+
+変更が必要な場合は受講者の保存状況と影響を確認し、構築手順のdiff・deployの順で実施します。
+
+{% filter staff_headings %}
+{% include 'environment/procedures/environment/10.md' %}
+{% endfilter %}
+
+{% filter staff_headings %}
+{% include 'environment/procedures/environment/13.md' %}
+{% endfilter %}
+
+{% endif %}

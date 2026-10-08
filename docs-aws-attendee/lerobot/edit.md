@@ -129,3 +129,11 @@ DATASET_REPO_ID="${DATASET_REPO_ID}_clean"
 ---
 
 [前へ: AWS へのデータ転送](../aws-transfer.md) · [次へ: 学習](train.md)
+
+{% if audience == "staff" %}
+
+## 講師：編集結果の到達確認
+
+削除対象を本人と確認し、元データと編集後の出力先を分けます。件数と映像を確認するまでは元データと差し替えません。
+
+{% endif %}

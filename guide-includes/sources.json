@@ -1,0 +1,113 @@
+{
+  "instructor": {
+    "branch": "feature/20261009-aws-instructor",
+    "commit": "0b755946a8fa80afed85ee71e88cadfb905ddfdb"
+  },
+  "environment": {
+    "branch": "feature/20261009-aws-environment",
+    "commit": "09857ee9183b1012b0d098190a2492399431d2e2"
+  },
+  "partials": {
+    "instructor/closing.md": [
+      "instructor/closing/00.md",
+      "instructor/closing/01.md",
+      "instructor/closing/02.md",
+      "instructor/closing/03.md"
+    ],
+    "instructor/contracts.md": [
+      "instructor/contracts/00.md",
+      "instructor/contracts/01.md",
+      "instructor/contracts/02.md"
+    ],
+    "instructor/index.md": [
+      "instructor/index/00.md",
+      "instructor/index/01.md",
+      "instructor/index/02.md",
+      "instructor/index/03.md",
+      "instructor/index/04.md"
+    ],
+    "instructor/operations.md": [
+      "instructor/operations/00.md",
+      "instructor/operations/01.md",
+      "instructor/operations/02.md",
+      "instructor/operations/03.md",
+      "instructor/operations/04.md",
+      "instructor/operations/05.md",
+      "instructor/operations/06.md",
+      "instructor/operations/07.md",
+      "instructor/operations/08.md",
+      "instructor/operations/09.md",
+      "instructor/operations/10.md"
+    ],
+    "instructor/support.md": [
+      "instructor/support/00.md",
+      "instructor/support/01.md",
+      "instructor/support/02.md",
+      "instructor/support/03.md",
+      "instructor/support/04.md",
+      "instructor/support/05.md"
+    ],
+    "instructor/verification.md": [
+      "instructor/verification/00.md",
+      "instructor/verification/01.md",
+      "instructor/verification/02.md",
+      "instructor/verification/03.md"
+    ],
+    "environment/handoff.md": [
+      "environment/handoff/00.md",
+      "environment/handoff/01.md",
+      "environment/handoff/02.md"
+    ],
+    "environment/index.md": [
+      "environment/index/00.md",
+      "environment/index/01.md",
+      "environment/index/02.md"
+    ],
+    "environment/procedures/environment.md": [
+      "environment/procedures/environment/00.md",
+      "environment/procedures/environment/01.md",
+      "environment/procedures/environment/02.md",
+      "environment/procedures/environment/03.md",
+      "environment/procedures/environment/04.md",
+      "environment/procedures/environment/05.md",
+      "environment/procedures/environment/06.md",
+      "environment/procedures/environment/07.md",
+      "environment/procedures/environment/08.md",
+      "environment/procedures/environment/09.md",
+      "environment/procedures/environment/10.md",
+      "environment/procedures/environment/11.md",
+      "environment/procedures/environment/12.md",
+      "environment/procedures/environment/13.md"
+    ],
+    "environment/specs/access-control.md": [
+      "environment/specs/access-control/00.md",
+      "environment/specs/access-control/01.md",
+      "environment/specs/access-control/02.md",
+      "environment/specs/access-control/03.md",
+      "environment/specs/access-control/04.md",
+      "environment/specs/access-control/05.md",
+      "environment/specs/access-control/06.md",
+      "environment/specs/access-control/07.md",
+      "environment/specs/access-control/08.md",
+      "environment/specs/access-control/09.md"
+    ],
+    "environment/specs/infrastructure.md": [
+      "environment/specs/infrastructure/00.md",
+      "environment/specs/infrastructure/01.md",
+      "environment/specs/infrastructure/02.md",
+      "environment/specs/infrastructure/03.md",
+      "environment/specs/infrastructure/04.md",
+      "environment/specs/infrastructure/05.md",
+      "environment/specs/infrastructure/06.md",
+      "environment/specs/infrastructure/07.md"
+    ],
+    "environment/verification.md": [
+      "environment/verification/00.md",
+      "environment/verification/01.md",
+      "environment/verification/02.md",
+      "environment/verification/03.md",
+      "environment/verification/04.md",
+      "environment/verification/05.md"
+    ]
+  }
+}
