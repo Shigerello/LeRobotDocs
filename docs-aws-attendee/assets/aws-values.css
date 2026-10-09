@@ -5,6 +5,8 @@
 .lerobot-port-input[aria-invalid="true"] {border-color:#b3261e;}
 .aws-error {color:#b3261e;font-size:.7rem;}
 .aws-controls {display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:-.5rem 0 1rem;font-size:.65rem;}
+/* Tabbed code blocks have no bottom margin; keep controls below them. */
+.tabbed-content .aws-controls {margin-top:.5rem;}
 .aws-copy {background:var(--md-primary-fg-color);color:var(--md-primary-bg-color);}
 .aws-copy:disabled {background:var(--md-default-fg-color--lightest);color:var(--md-default-fg-color--light);cursor:not-allowed;}
 .md-clipboard {display:none!important;}
