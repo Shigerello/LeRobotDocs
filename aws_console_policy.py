@@ -116,6 +116,9 @@ def on_pre_page_macros(env):
 これは静的ビルドに含まれる手順の表示設定です。実AWSのIAM適用を照会した証明ではありません。YAML未指定の通常プレビューは互換性のためtrueとなり、開催用の配布資料には正本YAMLを明示して再ビルドしてください。ブラウザの各種値やJSONインポートでこの設定は変更できません。
 
 falseに変更する場合は、同じ正本YAMLを変更 → AWS Sign-Inの有効化状態を確認 → CDK deploy → 受講者・インスタンスロールのIAM適用を確認 → 資格情報の払い出しと資料の再ビルド、の順で進めます。資料だけをfalseにしてもAWSのアクセスは拒否されません。
+
+---
+
 """
         # Insert after the first source heading, keeping it as the page title.
         markdown = env.markdown
