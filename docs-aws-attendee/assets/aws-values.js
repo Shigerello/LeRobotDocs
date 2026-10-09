@@ -9,14 +9,14 @@
   const atom = /^[A-Za-z0-9][A-Za-z0-9_.-]*$/;
   const path = value => value.length <= 512 && !/[\x00-\x1f\x7f]/.test(value) && !value.startsWith('~') && !value.includes('://') && /^(?:\/|\.\/|[A-Za-z0-9])/.test(value);
   const fields = {
-    EVENT_ID: ['開催 ID', v => /^[a-z][a-z0-9-]{1,14}[a-z0-9]$/.test(v), '英小文字で始まる3〜16文字。英小文字・数字・ハイフン、末尾ハイフン不可'],
-    ATTENDEE_ID: ['受講者 ID', v => /^[a-z][a-z0-9-]{1,30}$/.test(v) && v !== 'shared', '英小文字で始まる2〜31文字。英小文字・数字・ハイフン。sharedは予約語'],
-    BUCKET: ['S3 バケット名', v => /^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(v), '3〜63文字。英小文字・数字・ドット・ハイフン'],
-    REGION: ['AWS リージョン', v => /^[a-z]{2}(?:-[a-z]+)+-\d+$/.test(v), 'リージョンの識別子を入力'],
+    EVENT_ID: ['開催 ID', v => /^[a-z][a-z0-9-]{1,14}[a-z0-9]$/.test(v), '講師が配布する開催の名前。説明例: workshop01。英小文字で始まる3〜16文字。英小文字・数字・ハイフン、末尾ハイフン不可'],
+    ATTENDEE_ID: ['受講者 ID', v => /^[a-z][a-z0-9-]{1,30}$/.test(v) && v !== 'shared', '講師が配布する自分用のID。説明例: attendee01。英小文字で始まる2〜31文字。英小文字・数字・ハイフン。sharedは予約語'],
+    BUCKET: ['S3 バケット名', v => /^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(v), '講師が配布するAWS上の保管先の名前。説明例: example-handson-workshop01。s3://やパスを付けない。3〜63文字。英小文字・数字・ドット・ハイフン'],
+    REGION: ['AWS リージョン', v => /^[a-z]{2}(?:-[a-z]+)+-\d+$/.test(v), '講師が指定するAWSの地域。説明例: ap-northeast-1（東京）。自分の住所から選ばない'],
     PROFILE: ['AWS プロファイル', v => /^\S+$/.test(v) && !/[\x00-\x1f\x7f]/.test(v), '空白を含まないプロファイル名。@や:も使えます'],
     CONFIG_DIR: ['開催設定ディレクトリ', path, '絶対パスまたは相対パス。~ は使わず、空白はそのまま入力'],
-    DATASET_DIR: ['EC2 のデータセットディレクトリ', v => path(v) && v.startsWith('/'), 'EC2上の絶対パス。引用符を付けず入力'],
-    DATASET_REPO_ID: ['データセット識別名', v => /^[A-Za-z0-9][A-Za-z0-9_./-]{0,191}$/.test(v), '講師指定の識別名。必要なら所有者/名前'],
+    DATASET_DIR: ['EC2 のデータセットディレクトリ', v => path(v) && v.startsWith('/'), 'EC2でデータを読むフォルダ。説明例: /home/ubuntu/handson-data/workshop01/attendee01/round1。配布データは講師の配置先、自分の収集分は未使用の取得先。手元のPCのパスではない。引用符を付けず入力'],
+    DATASET_REPO_ID: ['データセット識別名', v => /^[A-Za-z0-9][A-Za-z0-9_./-]{0,191}$/.test(v), 'LeRobotでデータ一組に付ける講師指定の名前。説明例: attendee01/red-cube（所有者名/データ名）。フォルダとは別。手元の収集とEC2で同じ値を使う'],
     RELEASE: ['教材の版', v => atom.test(v) && v.length <= 64, '英数字で始まる64文字以内。公開済み版は上書きしない'],
     MANIFEST_SHA: ['教材 manifest SHA-256', v => /^[a-fA-F0-9]{64}$/.test(v), 'release buildが出力する64桁のハッシュ'],
     MATERIALS_DIR: ['公開する教材ディレクトリ', path, '絶対パスまたは相対パス。引用符を付けず入力'],

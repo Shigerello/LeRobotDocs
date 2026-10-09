@@ -60,6 +60,8 @@ DATASET_REPO_ID={{DATASET_REPO_ID_SH}}
 ls "$DATASET_DIR/meta/info.json"
 ```
 
+例えば講師が「EC2の `/home/ubuntu/handson-data/workshop01/attendee01/round1`、識別名は `attendee01/red-cube`」と案内したら、フォームの「EC2 のデータセットディレクトリ」と「データセット識別名」にそれぞれ入力します。この2つは説明用の例です。講師の配置先と指定名を使ってください。
+
 `meta/info.json` のパスが表示されれば配置確認は成功です。検証では `1cam_test` を使いましたが、本番配布する教材名・場所は講師が決めます。
 
 手元だけにデータがある場合は、講師に EC2 への配置を依頼するか、[SSH 設定](connect.md)を作成した後、**手元**からコピーできます。この `scp` による汎用手順は今回の実測対象外です。

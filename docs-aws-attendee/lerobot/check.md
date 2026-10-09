@@ -26,6 +26,19 @@
     lerobot-find-port
     ```
 
+ここで設定する値は、ロボットを接続した手元の機器で使います。以下の例は説明用で、実際の検出結果と講師の案内に置き換えます。
+
+| コマンドでの名前 | 意味と設定方法 | 説明用の例 |
+| --- | --- | --- |
+| `PROJECT_DIR` | LeRobotを準備した作業フォルダ。講師に手元の配置先を確認する | Macの `/Users/student/lerobot`、Jetsonの `/home/student/lerobot` |
+| `TELEOP_PORT` | 人が動かすLeaderアームのUSB接続先。上の検出結果からLeaderに対応するものを選ぶ | Jetsonの `/dev/ttyACM0`、Macの `/dev/tty.usbmodem12301` |
+| `ROBOT_PORT` | Leaderに追従するFollowerアームのUSB接続先。Leaderと取り違えない | Jetsonの `/dev/ttyACM1`、Macの `/dev/tty.usbmodem12302` |
+| `LOCAL_DATASET_DIR` | 手元で本収集するデータの保存フォルダ。下のコマンドが自分のホームフォルダ・開催ID・受講者IDから組み立てる | Macの `/Users/student/handson-data/workshop01/attendee01/round1` |
+| `DATASET_REPO_ID` | 映像と動作記録の一組に付ける識別名。[各種値の設定](../common.md)で講師指定の値を入力する | `attendee01/red-cube` |
+| `TASK` | ロボットにさせたい作業の説明文。講師の課題に合わせ、収集と推論で同じ文を使う | `Pick up the red cube`（赤い立方体を持ち上げる） |
+
+`$HOME`は現在操作中の機器の自分のホームフォルダです。下の `+=` は、直前に設定した文字列の末尾へ続きの文字列を付け足します。`round1`は1回目の収集分を区別する名前です。新しい収集分なら`round2`など未使用の名前へ変え、転送先も合わせます。
+
 検出した Leader／Follower のポート、手元の LeRobot 作業場所、収集先を設定します。`<…>` は手動で置き換えます。以降の手元の実習は、このターミナルで続けて実行します。
 
 ```bash

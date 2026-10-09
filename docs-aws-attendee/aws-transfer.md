@@ -6,6 +6,8 @@
 
 実行場所: **手元の Jetson／Mac**。受講者ツールを有効にしたターミナルで実行します。S3 の `shared/` は共有教材用です。自分の収集データは自分専用の領域へ保存します。
 
+`LOCAL_DATASET_DIR`は[接続の確認](lerobot/check.md)で決めた手元の収集先です。`TRANSFER_DIR`は転送用の圧縮ファイルを置く一時フォルダで、`mktemp -d`が未使用の場所を自動作成します。本人がパスを考えて入力する必要はありません。
+
 ```bash
 TRANSFER_DIR=$(mktemp -d)
 tar -czf "$TRANSFER_DIR/dataset.tar.gz" \
@@ -45,6 +47,10 @@ DATASET_REPO_ID={{DATASET_REPO_ID_SH}}
 S3_ROOT="s3://$GCLUE_AI_HANDSON_BUCKET"
 S3_ROOT+="/$GCLUE_AI_HANDSON_ATTENDEE"
 ```
+
+`DATASET_DIR`と`DATASET_REPO_ID`は[各種値の設定](common.md)で入力したEC2側のデータの場所・識別名です。自分の収集データを取得する場合、例えば `/home/ubuntu/handson-data/workshop01/attendee01/round1` のような未使用のフォルダを講師と確認します。配布データの場合は、講師が既に置いた場所を指定します。
+
+`source` は講師がEC2に配置した認証情報ファイルをこのターミナルへ読み込む操作です。ファイル内の `GCLUE_AI_HANDSON_BUCKET` はS3バケット名、`GCLUE_AI_HANDSON_ATTENDEE` は自分の受講者IDで、自分で作る値ではありません。`S3_ROOT`はこの2つから作る自分専用の保存先です。説明用の値なら `s3://example-handson-workshop01/attendee01` となります。次の `DOWNLOAD_DIR` も取得用の一時フォルダを自動作成する変数です。
 
 `whoami` が `ubuntu` であることを確認します。認証情報がない・期限切れの場合は講師に再配布を依頼します。EC2 上で依存を追加・更新せず、環境の不足は講師に確認します。
 

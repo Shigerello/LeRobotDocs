@@ -129,6 +129,8 @@ git --version
    bash bootstrap.sh --env-file '<認証情報ファイルの絶対パス>'
    ```
 
+   絶対パスの説明用の例は、Macなら `/Users/student/Downloads/attendee01.env`、Jetsonなら `/home/student/Downloads/attendee01.env` です。`student`は本人の端末のユーザー名、ファイル名は配布された自分のものに置き換えます。これはファイルの場所で、認証情報の本文を貼り付ける欄ではありません。
+
    - `<認証情報ファイル>`: 受け取った `{{ATTENDEE_ID}}.env` のパス（絶対パスを指定します）。
 
    講師が公開している最新の講義資料も一緒に取得されます。

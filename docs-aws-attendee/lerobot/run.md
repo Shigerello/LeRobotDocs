@@ -2,6 +2,8 @@
 
 実行場所: **手元の Jetson／Mac**。[AWS からのモデル回収](../aws-model-recovery.md)で設定した `POLICY_PATH` を使います。新しい Terminal では [接続の確認](check.md)と [カメラの調整](camera.md)の各変数も設定し直します。この AWS 連携後の実機推論は未検証です。
 
+`POLICY_PATH`は手元へ回収したモデルのフォルダの場所です。EC2の `TRAIN_OUTPUT_DIR` をここへ指定しません。新しいターミナルで再設定する場合は、回収時に控えた「モデル保存先」に `/checkpoints/last/pretrained_model` を付けた実際の場所を使います。例えば保存先が `/tmp/model-example` ならモデルの場所は `/tmp/model-example/checkpoints/last/pretrained_model` です。例のパスは入力せず、本人の取得先を使ってください。
+
 ## 1. 推論前の安全確認
 
 - ロボットの周囲から障害物を取り除きます。

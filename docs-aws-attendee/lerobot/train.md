@@ -18,6 +18,14 @@ PY
 
 GPU が表示され、PyTorch の結果が `True` なら、まず5000ステップで確認します。出力先は実行日時付きで作り、過去の成果を削除しません。
 
+| コマンドでの名前 | 意味・どこで使うか | 説明用の例・決め方 |
+| --- | --- | --- |
+| `RUN_NAME` | 学習を1回実行した結果に付ける名前。後でS3から同じ結果を取り戻す目印 | `act-20261009-103000`。下のコマンドが現在日時から自動作成する |
+| `TRAIN_OUTPUT_DIR` | EC2で学習結果とチェックポイントを保存するフォルダ | `/home/ubuntu/handson-work/workshop01/attendee01/outputs/act-20261009-103000`。下のコマンドが作る |
+| `HF_HUB_OFFLINE` | 外部のモデル配布サイトへ取得に行かず、準備済みのファイルを使う設定 | `1`。この講習会では案内どおり使う |
+
+`DATASET_DIR`は学習に読むデータの場所、`DATASET_REPO_ID`はその識別名です。編集済みなら[編集の手順](edit.md)で切り替えた値を使います。上の日時・パスは例なので入力しません。
+
 ```bash
 RUN_NAME="act-$(date +%Y%m%d-%H%M%S)"
 TRAIN_OUTPUT_DIR="$HOME/handson-work/{{EVENT_ID}}"
@@ -61,6 +69,8 @@ uv run --no-sync lerobot-train \
   --save_checkpoint_to_hub=false \
   --wandb.enable=false
 ```
+
+`TRAIN_CONFIG_PATH`は前回の学習条件を記録したファイルの場所で、下の設定で学習結果のフォルダの中の `checkpoints/last/pretrained_model/train_config.json` を指します。別の学習結果を指定しないよう、同じ `TRAIN_OUTPUT_DIR` を使います。
 
 実際にできた `train_config.json` の場所を確認します。`RUN_NAME` と `TRAIN_OUTPUT_DIR` を控えます。
 

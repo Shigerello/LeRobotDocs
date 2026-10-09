@@ -72,6 +72,8 @@ uv run --no-sync rerun "$DATASET_DIR"
 
 ## 3. エピソードを削除する
 
+`CLEAN_DATASET_DIR`は編集後のデータを置くEC2の新しいフォルダです。元の場所が `/home/ubuntu/handson-data/workshop01/attendee01/round1` なら末尾に `_clean` が付きます。新しい識別名も、元が `attendee01/red-cube` なら `attendee01/red-cube_clean` になります。どちらも下のコマンドが作る値で、元データと区別するためのものです。
+
 `[1, 2]` は確認した番号へ置き換えます。出力先が既にある場合は削除せず、別の名前にします。
 
 ```bash
@@ -109,7 +111,9 @@ DATASET_DIR="$CLEAN_DATASET_DIR"
 DATASET_REPO_ID="${DATASET_REPO_ID}_clean"
 ```
 
-編集しない場合はこの切替も飛ばします。共通設定は自動更新されないので、新しい Terminal では編集後の場所・識別名を設定し直します。
+この切替後は、学習にも編集後のフォルダと識別名を使います。例なら `DATASET_DIR` は `/home/ubuntu/handson-data/workshop01/attendee01/round1_clean`、`DATASET_REPO_ID` は `attendee01/red-cube_clean` です。元データのフォルダはそのまま残ります。
+
+編集しない場合はこの切替も飛ばします。ブラウザの共通設定は自動更新されません。上の切替が済んだら、同じEC2のTerminalで `printf '%s\n' "$DATASET_DIR" "$DATASET_REPO_ID"` を実行し、表示された1行目を「各種値の設定」の「EC2 のデータセットディレクトリ」、2行目を「データセット識別名」に入力し直します。これにより、新しいTerminalで設定コマンドをコピーし直したときも編集後のデータを使えます。別のブラウザやURLを使う場合は設定を受け渡して確認してください。
 
 ## 出力先の注意
 

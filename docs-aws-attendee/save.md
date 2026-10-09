@@ -36,6 +36,7 @@ S3_DEST+="els/day1/checkpoints/"
 aws s3 cp --recursive ./checkpoints "$S3_DEST"
 ```
 
+- `S3_DEST`はAWS上の保存先をまとめて覚える変数です。講師の認証ファイル内のバケット名と受講者IDから作り、説明用の例なら `s3://example-handson-workshop01/attendee01/models/day1/checkpoints/` になります。`models/day1`はこの保存例の分類名で、通し実習の `models/学習実行名/` とは別です。[モデル回収](aws-model-recovery.md)を進めている場合は、そちらの保存先と取得手順を使います。
 - 認証情報ファイルの場所は、講師から別の場所を案内された場合はそれに従います。
 - `./checkpoints`: 保存するフォルダ。`models/day1/checkpoints/` は保存先で、変えてもかまいません。
 
