@@ -24,7 +24,7 @@ gclue-ai-handson-attendee files pull --dest ./materials
 
 `manifest.json のとおりであることを SHA-256 で確認しました。` が成功条件です。版の指定がある場合は `--version '<版>'` を追加します。
 
-共有データセットは、講師が指定したプレフィックスを指定します。次の `datasets/` は配置例です。
+共有データセットは、講師が指定したS3 バケットパスから取得します。`--prefix` には共有領域 `shared/` からの相対パスを指定します。次の `datasets/` は配置例です。
 
 ```bash
 gclue-ai-handson-attendee files pull --prefix datasets/ \

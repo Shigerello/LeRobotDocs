@@ -10,7 +10,7 @@
 | --- | --- |
 | `docs/procedures/attendee.md` | 導入、認証更新、接続、Git、教材取得、保存、片付けの手順を再構成 |
 | `src/handson_tools/assets/attendee/bin/gclue-ai-handson-attendee` | サブコマンド、依存、環境とライブラリの契約を照合 |
-| `src/handson_tools/assets/attendee/lib/gclue-ai-handson/files.sh` | pull/upload の引数、プレフィックス、フォルダ名、SHA 検証範囲を照合 |
+| `src/handson_tools/assets/attendee/lib/gclue-ai-handson/files.sh` | pull/upload の引数、S3 バケットパス、フォルダ名、SHA 検証範囲を照合 |
 | `agent-work/handoff.md`（末尾 7〜9） | Git 修正の配布状況、EC2 実測、未完了工程を反映 |
 | `agent-work/research/lerobot-training-dependencies.md`（末尾実測追記） | 固定環境、LFS 復旧、Rerun と info の確認結果を反映 |
 

@@ -172,7 +172,7 @@ Windows では、WSL の中の VS Code の設定を Windows 側の VS Code は�
 
 ## S3 の画面を開く場合
 
-受講者にはバケット一覧の権限がありません。一覧画面の `AccessDenied` は必ずしも認証失敗ではありません。講師からバケット名、リージョン、自分のプレフィックスを受け取り、サインインした同じブラウザで次の形式を開きます。[共通値の設定](common.md)のバケット・リージョン・受講者 ID が反映された URL を使います。
+受講者にはバケット一覧の権限がありません。一覧画面の `AccessDenied` は必ずしも認証失敗ではありません。講師からバケット名、リージョン、自分のS3 バケットパスを受け取り、サインインした同じブラウザで次の形式を開きます。[共通値の設定](common.md)のバケット・リージョン・受講者 ID が反映された URL を使います。
 
 ```text
 https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&prefix={{ATTENDEE_ID}}%2F&showversions=false
