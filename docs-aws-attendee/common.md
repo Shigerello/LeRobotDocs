@@ -37,11 +37,15 @@ DATASET_DIR={{DATASET_DIR_SH}}
 DATASET_REPO_ID={{DATASET_REPO_ID_SH}}
 ```
 
+{% if attendee_console_access %}
+
 S3 の画面の行き先（先に受講者コンソールへサインイン）:
 
 ```text
 https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&prefix={{ATTENDEE_ID}}%2F&showversions=false
 ```
+
+{% endif %}
 
 ## 設定ファイルの受け渡し
 
@@ -65,6 +69,10 @@ https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&prefix
 | S3 バケット | {{BUCKET}} |
 | 受講者 ID | {{ATTENDEE_ID}} |
 
+{% if attendee_console_access %}
+
 <a href="https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&amp;prefix={{ATTENDEE_ID}}%2F&amp;showversions=false">{{BUCKET}} の受講者 {{ATTENDEE_ID}} 用S3画面</a>
 
 リンクは必要な値がすべて設定されると有効になります。リンク先を開く際は、手順に沿って対象のAWSコンソールへ先にサインインしてください。
+
+{% endif %}

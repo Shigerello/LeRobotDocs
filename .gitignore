@@ -3,3 +3,7 @@ site/
 /site-aws-attendee/
 /site-aws-staff/
 __pycache__/
+
+/site-console-*/
+
+/mkdocs.console-preview-*.yml

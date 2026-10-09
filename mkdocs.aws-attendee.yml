@@ -80,3 +80,4 @@ exclude_docs: 'staff/
 watch:
 - guide-includes
 - aws_guide_macros.py
+- aws_console_policy.py

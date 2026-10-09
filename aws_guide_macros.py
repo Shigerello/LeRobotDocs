@@ -1,8 +1,10 @@
 """Build-time guide composition; browser value tokens stay literal."""
 import posixpath
+from aws_console_policy import define_policy, on_pre_page_macros
 
 
 def define_env(env):
+    define_policy(env)
     audience = env.conf.get("extra", {}).get("audience")
     if audience not in {"attendee", "staff"}:
         raise ValueError("extra.audience must be attendee or staff")

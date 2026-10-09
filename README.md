@@ -116,3 +116,29 @@ Jinja変数は `<<= ... =>>`、コメントは `{## ... ##}` を使います。
 講習会側の準備は `staff/preparation.md` を入口とし、
 `staff/preparation/` の14工程へ分けています。ナビゲーションは
 `mkdocs.aws-staff.yml` で管理し、本文は共通部分ファイルを再利用します。
+
+## AWSガイドの静的コンソール設定
+
+開催YAMLをインフラと資料で共有します。`aws.handson.attendee_console_access` は厳格なboolで、省略時trueです。資料専用の真偽値フラグはありません。
+
+```bash
+export LEROBOT_HANDSON_CONFIG='<開催YAMLの絶対パス>'
+python -m mkdocs build -f mkdocs.aws-attendee.yml --strict
+python -m mkdocs build -f mkdocs.aws-staff.yml --strict
+```
+
+未指定は通常プレビュー用のtrueです。明示したYAMLの読込・型・名前空間エラーでは失敗します。担当者のはじめに・各種値の設定で入力YAML名、SHA-256、audience、boolと有効・無効の手順を確認できます。ブラウザのフォームやJSONはこの値を変更しません。YAML変更後は再ビルドが必要で、serveは選択YAMLを監視します。YAMLの全内容は公開せず、この設定値と来歴だけを投影します。
+
+falseへの切替は正本YAML変更、AWS Sign-In有効化状態の確認、CDK deploy、両ロールのIAM適用確認、資格情報払い出し・文書ビルドの順です。静的資料の表示はAWS適用を確認した証明ではありません。管理者自身の管理コンソールとCLI・SSM・SSH・DCVの手順は維持します。
+
+`tests/test_console_policy.py` でYAML契約を確認できます。`tests/fixtures/console-true.yml`、`console-false.yml` はビルド検証用の最小抜粋で、インフラdeploy用の完全な開催設定ではありません。
+
+受講者コンソール制御の実装参照は `GClueDev/ai-learning-handson-aws-infra` の `feature/20261008_docs_updates`、コミット `e1415f2b1daf5ad503e69a97698c9282b3f1903a` です。過去の接続実測の出典とは別に、開催YAML契約・IAM拒否・払い出し前確認・配布フラグを照合しています。実AWSでの適用は本資料作成時に未実施です。
+
+
+静的生成物（HTML・検索索引・JavaScript）のtrue/false検証:
+
+```bash
+python tests/verify_console_build.py mkdocs.aws-attendee.yml
+python tests/verify_console_build.py mkdocs.aws-staff.yml
+```

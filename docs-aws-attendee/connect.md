@@ -1,8 +1,10 @@
-# AWS コンソールと EC2 への接続
+# EC2 への接続
 
 最初に [共通値の設定](common.md) を開き、講師から受け取った値を入力してください。認証情報ファイルのパス・期限付き URL はフォームに保存せず、各コマンドの手動置換箇所で指定します。
 
 最初のコマンドはすべて **手元の PC** で実行します。`shell` / `ssh` で接続した後は **EC2** です。`exit` で手元に戻ります。DCV は手元のトンネル用ターミナルを開いたまま使います。
+
+{% if attendee_console_access %}
 
 ## 6. AWS マネジメントコンソールを開く
 
@@ -13,6 +15,8 @@ gclue-ai-handson-attendee console-url --open
 ブラウザで AWS マネジメントコンソールが開けば成功です。
 ブラウザが開かない場合は、表示された URL をブラウザに貼り付けます。
 URL は発行から約 15 分で使えなくなり、知っている人は誰でもあなたとしてサインインできるため、共有しないでください。
+
+{% endif %}
 
 ## 7. 自分の EC2 に接続する
 
@@ -170,6 +174,8 @@ Windows では、WSL の中の VS Code の設定を Windows 側の VS Code は�
 - 接続のたびに準備を行うため、`ssh gclue-ai-handson-{{EVENT_ID}}` も VS Code も、つながるまで少し時間がかかります。VS Code で接続がタイムアウトする場合は、VS Code の設定の `remote.SSH.connectTimeout` を大きく（例: `60`）します。
 
 
+{% if attendee_console_access %}
+
 ## S3 の画面を開く場合
 
 受講者にはバケット一覧の権限がありません。一覧画面の `AccessDenied` は必ずしも認証失敗ではありません。講師からバケット名、リージョン、自分のS3 バケットパスを受け取り、サインインした同じブラウザで次の形式を開きます。[共通値の設定](common.md)のバケット・リージョン・受講者 ID が反映された URL を使います。
@@ -180,6 +186,8 @@ https://s3.console.aws.amazon.com/s3/buckets/{{BUCKET}}?region={{REGION}}&prefix
 ```
 
 自分の領域と `shared/` の直接表示は実測済みです。画面でのダウンロード・書き込み・削除は未検証です。[CLI で保存と回収](save.md) を進めてください。`ListAllMyBuckets` 権限の追加は前提にしません。
+
+{% endif %}
 
 ## Git 往復の小さな練習
 

@@ -24,6 +24,7 @@ cp config/env.template/gclue-ai-handson-config.yml {{CONFIG_DIR_SH}}
 | `aws.handson.account` | アカウント ID（12 桁。`"` で囲む） | 1.3 で表示した値 |
 | `aws.handson.region` | リージョン（例: `ap-northeast-1`） | 管理者から受け取る |
 | `aws.handson.attendees` | 受講者 ID の一覧（1 件につき EC2 を 1 台作る。`shared` は使えない） | 用意するもの |
+| `aws.handson.attendee_console_access` | 受講者のAWSコンソール利用。真偽値 `true` / `false`、省略時true。インフラと資料で同じ開催YAMLを使用 | アクセス制御仕様の切替・適用確認に従う |
 | `aws.handson.max_session_duration_seconds` | 受講者に渡す認証情報の有効期間の上限（秒、3600〜43200）。通常は 43200（12 時間）のまま | — |
 | `aws.handson.dcv_port` | DCV の待ち受けポート。通常は 8443 のまま | — |
 | `aws.handson_cdk.network.vpc_cidr` | VPC の IP アドレスの範囲。アカウント内の他の VPC と重ならなければ記載例のまま | 下の VPC CIDR 確認コマンド |

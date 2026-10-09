@@ -44,7 +44,7 @@
 | DCV ログイン後が灰色 | デスクトップからログアウトして再ログインする。GNOME に `SIGQUIT` を送らない。改善しなければ講師へ相談する |
 | GNOME Terminal の文字が横に広い | 設定でフォントを Monospace 12、セルの幅・高さを 1.00 にする |
 | Parquet の `Corrupt footer` | Git LFS ポインタの可能性。[データセットページ](dataset.md)で実体化を確認する |
-| S3 バケット一覧が AccessDenied | [S3 バケットパスへの直接 URL](connect.md) を使う。バケット一覧権限は要求しない |
+{% if attendee_console_access %}| S3 バケット一覧が AccessDenied | [S3 バケットパスへの直接 URL](connect.md) を使う。バケット一覧権限は要求しない |{% else %}| S3の画面が使えない | このビルドでは受講者のコンソール操作を案内しません。CLIで保存・回収してください。 |{% endif %}
 
 講師に伝えるのは、実行場所（手元 / EC2）、コマンド名、秘密を除いたエラー文です。認証情報ファイルやコンソールのサインイン URL は貼り付けません。
 

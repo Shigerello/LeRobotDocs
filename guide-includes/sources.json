@@ -114,5 +114,10 @@
       "environment/verification/04.md",
       "environment/verification/05.md"
     ]
+  },
+  "console_access_contract": {
+    "repository": "GClueDev/ai-learning-handson-aws-infra",
+    "branch": "feature/20261008_docs_updates",
+    "commit": "e1415f2b1daf5ad503e69a97698c9282b3f1903a"
   }
 }

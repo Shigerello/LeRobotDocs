@@ -26,8 +26,8 @@
 | macOS Bash 3.2 / C.UTF-8 の修正 | `fc6e58d` に修正済み。旧配布版の更新は未実施。新しい配布版のローカルビルド・dry-run と実際の公開は別工程 |
 | 現行教材の files pull と SHA 検証 | 実測済み |
 | 手元 / EC2 → S3 → 手元への保存・再取得 | 小さな検証ファイルの内容一致を実測済み。最終成果全件の回収は未実施 |
-| フェデレーションコンソール | EC2 / SSM の表示成功。S3 の自分の領域 / shared の直 URL 表示成功 |
-| S3 コンソールで取得・書込・削除 | 未検証。バケット一覧権限は付与されていない |
+{% if attendee_console_access %}| フェデレーションコンソール | EC2 / SSM の表示成功。S3 の自分の領域 / shared の直 URL 表示成功 |{% else %}| フェデレーションコンソール（過去の記録） | このビルドの受講者手順には含めません。 |{% endif %}
+{% if attendee_console_access %}| S3 コンソールで取得・書込・削除 | 未検証。バケット一覧権限は付与されていない |{% else %}| S3 コンソールで取得・書込・削除（過去の記録） | このビルドの受講者手順には含めません。 |{% endif %}
 | LeRobot 依存導入 | `uv sync --locked --extra training --extra dataset_viz --python 3.12` が成功 |
 | Rerun 表示 | aloha の Git LFS 実体化後、および実績データ `1cam_test` で成功。pusht の表示は未確認 |
 | データ情報表示 | `lerobot-edit-dataset --operation.type info` が成功 |
