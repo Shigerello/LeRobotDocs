@@ -10,7 +10,17 @@
 
 {% include 'environment/procedures/environment/05.md' %}
 
-{% include 'environment/procedures/environment/06.md' %}
+{% include 'environment/procedures/environment/06-settings.md' %}
+
+{% include 'environment/procedures/environment/06-ami-find.md' %}
+
+{% include 'environment/procedures/environment/06-ami-launch.md' %}
+
+{% include 'environment/procedures/environment/06-ami-software.md' %}
+
+{% include 'environment/procedures/environment/06-ami-create.md' %}
+
+{% include 'environment/procedures/environment/06-placement.md' %}
 
 {% include 'environment/procedures/environment/07.md' %}
 

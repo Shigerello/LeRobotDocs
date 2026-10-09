@@ -10,7 +10,23 @@ theme:
     accent: black
 nav:
 - はじめに: index.md
-- 講習会側の準備: staff/preparation.md
+- 講習会側の準備:
+  - 進め方: staff/preparation.md
+  - 開始条件と道具: staff/preparation/environment-start.md
+  - 開催設定とAMIの選定: staff/preparation/event-settings.md
+  - 導入済みAMIの準備（任意）:
+    - 導入済みAMIの確認: staff/preparation/ami-find.md
+    - 一時インスタンスの起動: staff/preparation/ami-launch.md
+    - ソフトウェアの導入: staff/preparation/ami-software.md
+    - AMIの作成: staff/preparation/ami-create.md
+  - ルートデバイスと配置先: staff/preparation/placement.md
+  - 構築前の確認: staff/preparation/validate.md
+  - 環境の構築: staff/preparation/deploy.md
+  - 構築後の確認: staff/preparation/verify.md
+  - 講師への引き渡し: staff/preparation/handoff.md
+  - 講師の準備: staff/preparation/instructor-start.md
+  - 教材の公開: staff/preparation/materials.md
+  - EC2への教材配布: staff/preparation/rollout.md
 - LeRobot:
   - 実習の進め方: aws-workflow.md
   - 接続の確認: lerobot/check.md
