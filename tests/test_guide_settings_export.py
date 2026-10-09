@@ -98,12 +98,14 @@ class GuideSettingsExportTest(unittest.TestCase):
                 exporter.export_settings(directory, 'relative/path')
 
     def test_download_copy_matches_script(self):
-        role = ROOT.name
-        self.assertEqual(
-            (ROOT / 'scripts/export_attendee_guide_settings.py').read_bytes(),
-            (ROOT / f'docs-aws-{role}/assets/downloads/'
-             'export_attendee_guide_settings.py').read_bytes()
-        )
+        copies = list(ROOT.glob(
+            'docs-aws-*/assets/downloads/export_attendee_guide_settings.py'
+        ))
+        self.assertTrue(copies)
+        source = (ROOT / 'scripts/export_attendee_guide_settings.py').read_bytes()
+        for copy in copies:
+            self.assertEqual(source, copy.read_bytes())
+
 
 
 if __name__ == '__main__':

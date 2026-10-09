@@ -21,8 +21,9 @@
    **手元の Terminal** で、LeRobotDocs の直下から次を実行し、表示された全文をコピーします。
 
    ```bash
-   base64 < docs-aws-environment/scripts/setup-lerobot-ec2.sh | fold \
-     -w 76
+   SETUP_SCRIPT=docs-aws-attendee/staff/environment/scripts/
+   SETUP_SCRIPT+=setup-lerobot-ec2.sh
+   base64 < "$SETUP_SCRIPT" | fold -w 76
    ```
 
    **EC2 の Terminal**（手順 2 の `ubuntu` ユーザー）で、次の 1 行を実行します。
@@ -40,8 +41,9 @@
    既に SSH の接続先を設定している場合は、base64 の代わりに手元で次を実行してコピーできます。`<SSH 接続先>` は接続できるホスト名に置き換えます。受講者用 Bash CLI の `gclue-ai-handson-attendee ssh-config` で SSH 設定を作った講習会の EC2 では `gclue-ai-handson-{{EVENT_ID}}` を使えます。
 
    ```bash
-   scp docs-aws-environment/scripts/setup-lerobot-ec2.sh \
-     <SSH 接続先>:~/setup-lerobot-ec2.sh
+   SETUP_SCRIPT=docs-aws-attendee/staff/environment/scripts/
+   SETUP_SCRIPT+=setup-lerobot-ec2.sh
+   scp "$SETUP_SCRIPT" <SSH 接続先>:~/setup-lerobot-ec2.sh
    ```
 
    導入が成功したら、EC2 で次を実行します。GPU が使えることと、各コマンドの版・ヘルプが表示されることを確かめます。
