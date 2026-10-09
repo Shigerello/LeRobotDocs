@@ -25,8 +25,9 @@
     INSTANCE_ID: ['対象 EC2 インスタンス ID', v => /^i-(?:[a-f0-9]{8}|[a-f0-9]{17})$/.test(v), '通常の確認対象。一時構築EC2は各手順で別途指定'],
     INSTANCE_TYPE: ['EC2 インスタンスタイプ', v => /^[a-z][a-z0-9-]*\.[a-z0-9]+$/.test(v), '管理者が選定したタイプ'],
   };
+  const attendeeFields = ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','DATASET_DIR','DATASET_REPO_ID'];
   const roleFields = {
-    attendee: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','DATASET_DIR','DATASET_REPO_ID'],
+    attendee: attendeeFields,
     instructor: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','PROFILE','CONFIG_DIR','RELEASE','MANIFEST_SHA','MATERIALS_DIR'],
     environment: ['EVENT_ID','ATTENDEE_ID','BUCKET','REGION','PROFILE','CONFIG_DIR','ACCOUNT_ID','AMI_ID','INSTANCE_ID','INSTANCE_TYPE'],
     staff: Object.keys(fields),
@@ -240,7 +241,26 @@
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       reportTransfer(`有効な設定 ${Object.keys(state).length}件をエクスポートしました。他の役割用に保持した値も含みます。`);
     });
-    actions.append(importButton, exportButton, reset, file); form.append(actions, transferStatus);
+    actions.append(importButton, exportButton);
+    if (role !== 'attendee') {
+      const attendeeExport = document.createElement('button');
+      attendeeExport.type = 'button'; attendeeExport.className = 'lerobot-port-btn';
+      attendeeExport.textContent = '受講者向けをエクスポート';
+      attendeeExport.addEventListener('click', () => {
+        const values = Object.fromEntries(attendeeFields
+          .filter(key => typeof state[key] === 'string' && fields[key][1](state[key]))
+          .map(key => [key, state[key]]));
+        const data = {format: 'lerobot-aws-guide-settings', version: 1, values};
+        const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2) + '\n'], {type: 'application/json'}));
+        const anchor = document.createElement('a'); anchor.href = url;
+        anchor.download = values.ATTENDEE_ID ? `${values.ATTENDEE_ID}.guide-settings.json` : 'lerobot-attendee-guide-settings.json';
+        document.body.append(anchor); anchor.click(); anchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        reportTransfer(`受講者向けの確定値 ${Object.keys(values).length}件をエクスポートしました。未入力の項目は含みません。${values.ATTENDEE_ID ? '受講者 ID: ' + values.ATTENDEE_ID : '受講者ID未設定の共通設定です。'}`);
+      });
+      actions.append(attendeeExport);
+    }
+    actions.append(reset, file); form.append(actions, transferStatus);
 
     const status = document.createElement('p'); status.dataset.awsSaveStatus = ''; status.setAttribute('role','status');
     host.append(form,status);

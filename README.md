@@ -142,3 +142,24 @@ falseへの切替は正本YAML変更、AWS Sign-In有効化状態の確認、CDK
 python tests/verify_console_build.py mkdocs.aws-attendee.yml
 python tests/verify_console_build.py mkdocs.aws-staff.yml
 ```
+
+## 受講者配布用の各種値の設定JSON
+
+一時認証情報を書き出したディレクトリから、本人ごとの
+`.guide-settings.json` を生成できます。Python 3の標準ライブラリのみ使用します。
+
+```bash
+python3 scripts/export_attendee_guide_settings.py \
+  --credentials-dir '<発行済み認証情報のディレクトリ>'
+```
+
+確定済みのデータセット値だけを追加する場合は、`--dataset-dir` と
+`--dataset-repo-id` を指定します。省略した項目はJSONに含めません。
+発行済み `.env` の4項目だけを読み取り、shellとして実行しません。
+AWSへの発行・送信処理は行わず、資格情報ファイルも書き換えません。
+ブラウザの「受講者向けをエクスポート」も受講者用6項目だけを書き出します。
+
+配布用スクリプトは `docs-aws-attendee/assets/downloads/` にも置いています。
+変更時は `scripts/` と配布用コピーを揃えてください。
+`python3 tests/test_guide_settings_export.py` で生成形式・未確定値の省略・
+秘密と管理者項目の除外・不正入力時の停止を確認できます。
